@@ -184,16 +184,28 @@ web/
     ├── favicon.ico + favicon-16/32.png
 ```
 
-**Étapes Netlify (Expo Web) :**
+L'app tourne en **web** (`react-native-web`). Un script post‑export rend l'export Expo
+installable en PWA (injection du `<head>`, copie des icônes/manifest, fallback SPA).
 
-1. Générer le site statique :
-   ```bash
-   cd GrainorApp && npx expo export --platform web   # sortie dans dist/
-   ```
-2. Copier `web/manifest.webmanifest` et `web/icons/` à la racine publiée, puis insérer le
-   contenu de `web/head-snippet.html` dans le `<head>` de la page.
-3. Déployer le dossier `dist/` sur Netlify (drag‑and‑drop ou `netlify deploy --prod --dir dist`).
-4. Sur le téléphone : ouvrir le site → *Ajouter à l'écran d'accueil*. L'icône 🌱 Grainor apparaît.
+**Build local :**
+
+```bash
+cd GrainorApp
+npm run build:web        # expo export web + post-traitement PWA → GrainorApp/dist/
+npx serve dist           # (optionnel) prévisualiser localement
+```
+
+**Déploiement Netlify — automatique** via [`netlify.toml`](netlify.toml) (déjà configuré) :
+
+1. Sur Netlify : *Add new site → Import from Git* → ce dépôt. Le `netlify.toml` fixe
+   `base = GrainorApp`, `command = npm ci && npm run build:web`, `publish = GrainorApp/dist`.
+2. Déploiement déclenché à chaque push. (Ou en CLI : `netlify deploy --prod`.)
+3. Sur le téléphone : ouvrir le site → *Ajouter à l'écran d'accueil*. L'icône 🌱 Grainor apparaît,
+   l'app s'ouvre en plein écran (`display: standalone`).
+
+> Le script [`GrainorApp/scripts/web-pwa.mjs`](GrainorApp/scripts/web-pwa.mjs) corrige le titre/la
+> langue, injecte manifest + `theme-color` + apple‑touch‑icon, copie `web/icons/` et écrit un
+> `_redirects`. Idempotent et réexécutable.
 
 ---
 

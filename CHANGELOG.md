@@ -7,9 +7,16 @@ et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ## [Non publié]
 
+### Ajouté
+- **Cible web (PWA)** — l'app tourne sous `react-native-web`. Script `scripts/web-pwa.mjs` +
+  commande `npm run build:web` : export Expo web post‑traité (titre/langue, manifest,
+  `theme-color`, apple‑touch‑icon, copie des icônes, fallback SPA `_redirects`).
+- **`netlify.toml`** — déploiement Netlify automatique (base `GrainorApp`, publie `dist/`).
+- **`app.json`** — config `web` (nom, langue, couleurs, `display: standalone`) ; nom de l'app
+  passé à « Grainor ».
+
 ### À venir
-- Captures d'écran prises sur appareil (dossier `docs/screenshots/`).
-- Export web (`expo export --platform web`) + déploiement Netlify de la PWA.
+- Captures d'écran prises sur appareil/navigateur (dossier `docs/screenshots/`).
 - Persistance des variétés ajoutées et des récoltes saisies (actuellement en mémoire).
 
 ---

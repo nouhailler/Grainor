@@ -1,0 +1,27 @@
+# Déploiement de la PWA Grainor sur Netlify.
+# Build depuis le sous-dossier de l'app Expo ; publie l'export web post-traité (PWA).
+
+[build]
+  base = "GrainorApp"
+  command = "npm ci && npm run build:web"
+  publish = "GrainorApp/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Fallback SPA (la navigation est gérée côté client par React Navigation).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# En-têtes utiles pour une PWA installable.
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
