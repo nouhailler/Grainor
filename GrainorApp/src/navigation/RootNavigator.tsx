@@ -15,23 +15,20 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon, IconName } from '../components/Icon';
+import { AccueilScreen } from '../screens/AccueilScreen';
+import { AjoutScreen } from '../screens/AjoutScreen';
+import { CalendrierScreen } from '../screens/CalendrierScreen';
 import { CatalogueScreen } from '../screens/CatalogueScreen';
 import { DetailScreen } from '../screens/DetailScreen';
-import { makePlaceholder } from '../screens/Placeholder';
+import { InventaireScreen } from '../screens/InventaireScreen';
+import { NoterRecolteScreen } from '../screens/NoterRecolteScreen';
+import { ParametresScreen } from '../screens/ParametresScreen';
+import { RecoltesScreen } from '../screens/RecoltesScreen';
 import { colors, fonts, shadow } from '../theme/tokens';
 import type { RootStackParamList, TabParamList } from './types';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-const AccueilScreen = makePlaceholder('Accueil', 'Tableau de bord — stats, à semer, à surveiller');
-const RecoltesScreen = makePlaceholder('Récoltes', 'Journal de récupération des semences');
-const InventaireScreen = makePlaceholder('Inventaire', "Zones d'entreposage et remplissage");
-const CalendrierScreen = makePlaceholder('Calendrier', 'Vue par mois + agenda annuel');
-
-const AjoutScreen = makePlaceholder('Ajouter une graine', 'Assistant IA + scan + saisie manuelle', true);
-const NoterRecolteScreen = makePlaceholder('Noter une récolte', 'Variété, méthode, statut, notes', true);
-const ParametresScreen = makePlaceholder('Paramètres', 'Clé OpenRouter (stockage local)', true);
 
 const TAB_META: Array<{ name: keyof TabParamList; label: string; icon: IconName }> = [
   { name: 'Accueil', label: 'Accueil', icon: 'home' },

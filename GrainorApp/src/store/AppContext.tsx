@@ -66,16 +66,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Les variétés enrichies : recalculées quand les données brutes changent.
-  // Les guides ne couvrant que les 11 variétés de démo, on enrichit prudemment.
-  const seeds = useMemo<EnrichedSeed[]>(() => {
-    return rawSeeds.map((s) => {
-      try {
-        return enrich(s);
-      } catch {
-        return enrich({ ...s, id: 1 }); // garde-fou si pas de guide pour un id ajouté
-      }
-    });
-  }, [rawSeeds]);
+  // enrich() applique un guide par défaut si la variété ajoutée n'en a pas.
+  const seeds = useMemo<EnrichedSeed[]>(() => rawSeeds.map(enrich), [rawSeeds]);
 
   const value = useMemo<AppState>(
     () => ({

@@ -8,9 +8,42 @@ et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 ## [Non publié]
 
 ### À venir
-- Écrans restants : Accueil, Récoltes, Noter une récolte, Inventaire, Calendrier
-  (par mois + agenda annuel), Ajouter une graine (assistant IA OpenRouter), Paramètres.
+- Captures d'écran prises sur appareil (dossier `docs/screenshots/`).
 - Export web (`expo export --platform web`) + déploiement Netlify de la PWA.
+- Persistance des variétés ajoutées et des récoltes saisies (actuellement en mémoire).
+
+---
+
+## [0.2.0] — 2026-06-16
+
+Les **6 écrans restants** : l'app couvre désormais les 8 écrans + navigation du handoff (§9).
+
+### Ajouté
+- **Écran Accueil** (§4.1) — en‑tête logo, salutation, recherche‑raccourci, 4 tuiles de stats,
+  carrousel « À semer ce mois‑ci », alertes « À surveiller » (§6.3), dernières récoltes.
+- **Écran Récoltes** (§4.4) — bandeau de saison, filtre par statut, journal des récupérations.
+- **Écran Noter une récolte** (§4.4) — variété, date, quantité, méthode d'extraction, statut,
+  notes ; enregistrement dans le journal.
+- **Écran Inventaire** (§4.5) — 5 zones d'entreposage avec barre de remplissage (terracotta
+  au‑delà de 85 %) et variétés stockées.
+- **Écran Calendrier** (§4.6) — bascule « Par mois » / « Agenda annuel » ; agenda = 1 ligne par
+  variété × 12 mois, mini‑barres semis (couleur famille) + récolte (brun), mois courant surligné.
+- **Écran Ajouter une graine** (§4.7) — assistant IA OpenRouter (proposition JSON validée par
+  l'utilisateur avant remplissage), zone de scan d'étiquette, formulaire manuel complet.
+- **Écran Paramètres** (§4.8) — saisie de la clé OpenRouter (champ masqué, stockage local
+  sécurisé), choix du modèle gratuit, bloc « À propos » hors‑ligne.
+- **Module IA** (`src/logic/ai.ts`) — prompt système, liste des modèles `:free`, appel OpenRouter
+  et parsing tolérant du JSON.
+- Composants partagés `TopBar` et `Logo`, icônes `check` / `chevron`.
+- Gallerie de captures de tous les écrans dans le `README`.
+
+### Modifié
+- `enrich()` applique un **guide par défaut** si une variété ajoutée n'a pas de fiche de
+  récupération détaillée (les variétés ajoutées conservent leur identifiant réel).
+
+### Vérifié
+- `npx tsc --noEmit` — sans erreur.
+- `npx expo export --platform android` — bundle généré avec succès.
 
 ---
 
@@ -49,5 +82,6 @@ Première brique : socle technique + design, et les deux écrans les plus struct
 - `npx tsc --noEmit` — sans erreur.
 - `npx expo export --platform android` — bundle généré avec succès.
 
-[Non publié]: https://github.com/nouhailler/Grainor/compare/v0.1.0...HEAD
+[Non publié]: https://github.com/nouhailler/Grainor/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/nouhailler/Grainor/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/nouhailler/Grainor/releases/tag/v0.1.0

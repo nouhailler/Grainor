@@ -7,10 +7,12 @@ import {
   StyleSheet,
   Text,
   TextStyle,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
 import { colors, fonts, hexA, radius } from '../theme/tokens';
+import { Icon } from './Icon';
 
 /** Pastille pleine de couleur (point famille / cycle / statut). */
 export function Dot({ color, size = 7 }: { color: string; size?: number }) {
@@ -73,6 +75,47 @@ export function ScreenTitle({ children, style }: { children: React.ReactNode; st
   return <Text style={[styles.screenTitle, style]}>{children}</Text>;
 }
 
+/** Barre de titre des écrans en pile : bouton retour + titre serif centré. */
+export function TopBar({ title, onBack }: { title: string; onBack: () => void }) {
+  return (
+    <View style={styles.topbar}>
+      <TouchableOpacity onPress={onBack} style={styles.roundBtn} activeOpacity={0.7}>
+        <Icon name="back" size={18} color={colors.text} />
+      </TouchableOpacity>
+      <Text style={styles.topbarTitle}>{title}</Text>
+      <View style={{ width: 38 }} />
+    </View>
+  );
+}
+
+/** Logo Grainor : « graine » verte inclinée avec point clair (cf. §2.4). */
+export function Logo({ size = 36 }: { size?: number }) {
+  return (
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size * 0.52,
+        borderBottomLeftRadius: size * 0.22,
+        backgroundColor: colors.primaryGradTo,
+        alignItems: 'center',
+        justifyContent: 'center',
+        transform: [{ rotate: '-12deg' }],
+      }}
+    >
+      <View
+        style={{
+          width: size * 0.19,
+          height: size * 0.19,
+          borderRadius: size * 0.1,
+          backgroundColor: colors.seedDot,
+          transform: [{ rotate: '12deg' }],
+        }}
+      />
+    </View>
+  );
+}
+
 /** Frise de 12 cases (fenêtre de semis), mois courant entouré. */
 export function MonthCells({
   sd,
@@ -130,4 +173,23 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: colors.text,
   },
+  topbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 6,
+  },
+  roundBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  topbarTitle: { fontFamily: fonts.serif, fontSize: 20, color: colors.text },
 });

@@ -48,8 +48,10 @@ GrainorApp/src/
 ├── data/seeds.ts        Jeu de données de démo verbatim (11 variétés, 7 récoltes, 11 guides)
 ├── logic/seeds.ts       Logique métier pure → enrich(seed) renvoie un EnrichedSeed
 ├── store/AppContext.tsx État global (Provider + useApp) : seeds, harvests, photos, clé API
-├── components/          Icon, ui (Pill/Card/…), Gauge, ImageSearchModal
-├── screens/             CatalogueScreen, DetailScreen, Placeholder (écrans à venir)
+├── components/          Icon, ui (Pill/Card/TopBar/Logo/…), Gauge, ImageSearchModal
+├── logic/ai.ts          Assistant IA OpenRouter (prompt, modèles, parsing JSON)
+├── screens/             les 8 écrans (Accueil, Catalogue, Detail, Recoltes,
+│                        NoterRecolte, Inventaire, Calendrier, Ajout, Parametres)
 └── navigation/          RootNavigator (onglets + pile + FAB), types
 ```
 
@@ -114,6 +116,7 @@ SVG `web/icons/icon.svg` et `web/icons/icon-maskable.svg`. Voir le `README.md` r
 
 ## 8. État d'avancement
 
-Voir [`CHANGELOG.md`](CHANGELOG.md). En bref : socle (thème + navigation + Catalogue + Fiche
-détail) en place et validé (typecheck + build OK) ; les 6 écrans restants sont câblés en
-placeholders, à implémenter après validation visuelle.
+Voir [`CHANGELOG.md`](CHANGELOG.md). En bref : les **8 écrans + navigation** sont implémentés et
+fidèles aux captures du handoff (Définition de « terminé » §9 couverte). Typecheck et build
+Android verts. Reste surtout la persistance des variétés/récoltes ajoutées et le déploiement
+PWA Netlify.

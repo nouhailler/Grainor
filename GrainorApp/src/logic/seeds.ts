@@ -72,12 +72,21 @@ export function isSemis(s: Pick<RawSeed, 'sd' | 'se'>, m: number): boolean {
 
 export type EnrichedSeed = ReturnType<typeof enrich>;
 
+/** Guide par défaut pour les variétés ajoutées sans fiche de récupération détaillée. */
+const DEFAULT_GUIDE = {
+  diff: 'Moyen' as const,
+  note: 'Renseignez le mode de reproduction (autogame/allogame) et les besoins d\'isolement.',
+  recolte: [] as { t: string; d: string }[],
+  tri: [] as { t: string; d: string }[],
+  germination: [] as { t: string; d: string }[],
+};
+
 /** Enrichit une variété brute avec toutes les valeurs dérivées d'affichage. */
 export function enrich(s: RawSeed) {
   const familyColor = FAMS[s.famille] || '#7A7363';
   const g = germColors(s.germ);
-  const cy = CYCLE[s.cycle];
-  const guide = GUIDES[s.id];
+  const cy = CYCLE[s.cycle] ?? CYCLE.annuelle;
+  const guide = GUIDES[s.id] ?? DEFAULT_GUIDE;
   const dm = DIFF[guide.diff];
   const v = viability(s);
   return {

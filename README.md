@@ -42,25 +42,57 @@ L'app fonctionne **hors‑ligne par défaut** : toutes les données vivent sur l
 
 | # | Écran | État |
 |---|-------|------|
-| 🏠 | **Accueil** — tableau de bord, à semer, à surveiller | ⏳ à venir |
+| 🏠 | **Accueil** — tableau de bord, à semer, à surveiller | ✅ implémenté |
 | 📖 | **Catalogue** — recherche + filtres par famille botanique | ✅ implémenté |
 | 🔎 | **Fiche détail** — viabilité, classification, guide de récupération | ✅ implémenté |
-| 🌾 | **Récoltes** — journal de récupération des semences | ⏳ à venir |
-| ✍️ | **Noter une récolte** — variété, méthode, statut, notes | ⏳ à venir |
-| 📦 | **Inventaire** — zones d'entreposage et remplissage | ⏳ à venir |
-| 🗓️ | **Calendrier** — par mois + agenda annuel | ⏳ à venir |
-| ➕ | **Ajouter une graine** — assistant IA + saisie manuelle | ⏳ à venir |
-| ⚙️ | **Paramètres** — clé OpenRouter (stockage local sécurisé) | ⏳ à venir |
+| 🌾 | **Récoltes** — journal de récupération des semences | ✅ implémenté |
+| ✍️ | **Noter une récolte** — variété, méthode, statut, notes | ✅ implémenté |
+| 📦 | **Inventaire** — zones d'entreposage et remplissage | ✅ implémenté |
+| 🗓️ | **Calendrier** — par mois + agenda annuel | ✅ implémenté |
+| ➕ | **Ajouter une graine** — assistant IA + saisie manuelle | ✅ implémenté |
+| ⚙️ | **Paramètres** — clé OpenRouter (stockage local sécurisé) | ✅ implémenté |
+
+> ✅ Les **8 écrans + navigation** sont implémentés. La *Définition de « terminé »* (§9 du handoff) est couverte.
 
 > Navigation : 5 onglets en bas (Accueil · Catalogue · Récoltes · Inventaire · Calendrier),
 > un bouton **＋** flottant pour ajouter une variété, et les Paramètres accessibles depuis l'entête.
 
-### Aperçu de la maquette cible
+### 📸 Aperçu des écrans
+
+> Captures de référence du design (dossier [`design_handoff_grainor/screenshots/`](design_handoff_grainor/screenshots/)) —
+> **reproduites à l'identique** par l'app (mêmes tokens, mêmes composants). Pour des captures
+> prises sur appareil, lancez l'app (cf. *Démarrer*) puis ajoutez‑les dans `docs/screenshots/`.
+
+**Accueil · Catalogue · Fiche détail**
 
 <div align="center">
+<img src="design_handoff_grainor/screenshots/01-accueil.png" width="220" />
 <img src="design_handoff_grainor/screenshots/03-catalogue.png" width="220" />
 <img src="design_handoff_grainor/screenshots/04-fiche-haut.png" width="220" />
+</div>
+
+**Fiche détail (conservation · guide) · Récoltes**
+
+<div align="center">
+<img src="design_handoff_grainor/screenshots/05-fiche-conservation.png" width="220" />
 <img src="design_handoff_grainor/screenshots/07-fiche-guide.png" width="220" />
+<img src="design_handoff_grainor/screenshots/09-recoltes.png" width="220" />
+</div>
+
+**Noter une récolte · Inventaire · Calendrier (par mois)**
+
+<div align="center">
+<img src="design_handoff_grainor/screenshots/10-noter-recolte.png" width="220" />
+<img src="design_handoff_grainor/screenshots/11-inventaire.png" width="220" />
+<img src="design_handoff_grainor/screenshots/12-calendrier-mois.png" width="220" />
+</div>
+
+**Calendrier (agenda annuel) · Ajouter (assistant IA) · Paramètres**
+
+<div align="center">
+<img src="design_handoff_grainor/screenshots/13-calendrier-annuel.png" width="220" />
+<img src="design_handoff_grainor/screenshots/14-ajout-ia.png" width="220" />
+<img src="design_handoff_grainor/screenshots/16-parametres.png" width="220" />
 </div>
 
 ---

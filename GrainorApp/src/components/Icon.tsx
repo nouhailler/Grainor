@@ -20,7 +20,9 @@ export type IconName =
   | 'camera'
   | 'close'
   | 'dots'
-  | 'scan';
+  | 'scan'
+  | 'check'
+  | 'chevron';
 
 interface Props {
   name: IconName;
@@ -154,6 +156,18 @@ export function Icon({ name, size = 22, color = '#2B271F', strokeWidth = 1.8 }: 
           <Circle cx="12" cy="5" r="1.6" fill={color} />
           <Circle cx="12" cy="12" r="1.6" fill={color} />
           <Circle cx="12" cy="19" r="1.6" fill={color} />
+        </Svg>
+      );
+    case 'check':
+      return (
+        <Svg {...common}>
+          <Path d="M5 12.5l4.5 4.5L19 7" {...stroke} {...cap} strokeWidth={strokeWidth} />
+        </Svg>
+      );
+    case 'chevron':
+      return (
+        <Svg {...common}>
+          <Path d="M9 6l6 6-6 6" {...stroke} {...cap} strokeWidth={strokeWidth} />
         </Svg>
       );
     default:
