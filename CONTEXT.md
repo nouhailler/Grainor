@@ -26,7 +26,9 @@ tokens.
 
 **Couleurs clés** : `bg #EFE7D6`, `surface #FCFAF5`, `surfaceAlt #FBF7EE`, `primary #33503B`,
 `text #2B271F`. Couleurs sémantiques (good/warn/alert/multiply), une couleur par **famille
-botanique** (9) et par **cycle de vie** (annuelle/bisannuelle/vivace).
+botanique** (9) et par **cycle de vie** (annuelle/bisannuelle/vivace). Les **familles
+personnalisées** (créées à l'ajout ou proposées par l'IA hors des 9) sont autorisées et prennent
+une **couleur neutre** (`#7A7363` via `FAMS[f] ?? défaut`).
 
 **Typographie** : Newsreader (serif) pour noms de variétés, titres et chiffres ; Hanken Grotesk
 (sans) pour l'UI. Chargées via `@expo-google-fonts` dans `App.tsx`.
@@ -56,8 +58,14 @@ GrainorApp/src/
 ```
 
 - **État global** via React Context (`AppProvider` / `useApp`). Recalcul des variétés enrichies
-  en `useMemo` à partir des données brutes.
-- **Persistance** : `AsyncStorage` (photos par variété) ; `expo-secure-store` (clé API + modèle).
+  en `useMemo` à partir des données brutes. Méthodes : `addSeed`, `updateSeed`, `addHarvest`,
+  `setPhoto`, `saveApiKey`, `exportData`, `importData`.
+- **Persistance** (`AsyncStorage`) : variétés `grainor.seeds`, récoltes `grainor.harvests`,
+  photos `grainor.photos` ; clé + modèle IA dans `expo-secure-store`
+  (`grainor.openrouter.key/model`). Les ajouts/édition/import et récoltes survivent au redémarrage.
+- **Import / export JSON** : `exportData()` (sauvegarde variétés + récoltes + photos),
+  `importData()` (restauration complète **ou** ajout de variétés ; `normalizeSeed` complète les
+  champs manquants). UI dans Paramètres.
 - **Rendu** suspendu tant que les polices **et** le store ne sont pas prêts (`App.tsx`).
 
 ---
@@ -82,9 +90,14 @@ Implémentée dans `logic/seeds.ts`. Année/mois de référence figés (`CURRENT
 
 - **§7.1 Wikimedia Commons** — `ImageSearchModal` interroge l'API publique (sans clé) ; filtre
   les MIME image ; propose un lien Google Images. L'image choisie est persistée localement.
-- **§7.2 OpenRouter** — assistant IA pour pré‑remplir une fiche variété. Modèle `:free` par
-  défaut (`meta-llama/llama-3.3-70b-instruct:free`). La réponse JSON est parsée, **présentée et
-  validée par l'utilisateur** avant enregistrement.
+- **§7.2 OpenRouter** (`logic/ai.ts`) — assistant IA pour pré‑remplir une fiche variété. Le prompt
+  impose un JSON **complet** : classification, cycle, fenêtres semis/récolte (mois entiers),
+  germination, profondeur/levée/espacement, et le **guide Récolte · Tri · Germination** (étapes).
+  Tout est mappé dans la variété → fiche immédiatement exploitable. La proposition reste
+  **validée par l'utilisateur** avant enregistrement (`askOpenRouter`, `parseAI`, `aiStepsToGuide`).
+  Une fois la clé enregistrée, `fetchFreeModels(key)` charge la **liste live des modèles gratuits**
+  (`GET /api/v1/models`, filtre `:free` / tarif nul) ; le choix est persisté. Repli : `AI_MODELS`.
+  Déclenchable aussi depuis le **Catalogue** (recherche sans résultat → « créer avec l'IA »).
 
 ### 🔐 Contrainte de sécurité (impérative)
 
@@ -98,10 +111,16 @@ Clés de stockage : `grainor.openrouter.key`, `grainor.openrouter.model` (Secure
 
 ## 6. PWA (dossier `web/`)
 
-Grainor est aussi destiné à être installé en **PWA** (déploiement Netlify via `expo export
---platform web`). Le dossier `web/` fournit le manifest, les icônes (`any` + `maskable`,
-favicons, apple‑touch) et un snippet `<head>`. Les icônes sont régénérables depuis les sources
-SVG `web/icons/icon.svg` et `web/icons/icon-maskable.svg`. Voir le `README.md` racine.
+Grainor tourne en **web** (`react-native-web`) et s'installe en **PWA**. Le dossier `web/` fournit
+le manifest, les icônes (`any` + `maskable`, favicons, apple‑touch) et un snippet `<head>` (icônes
+régénérables depuis `web/icons/icon.svg` / `icon-maskable.svg`).
+
+Build/déploiement **clé en main** :
+- `npm run build:web` (dans `GrainorApp/`) = `expo export --platform web` **+**
+  `scripts/web-pwa.mjs dist` (injecte titre/langue + manifest + theme-color + apple‑touch, copie
+  les icônes, écrit `_redirects`).
+- [`netlify.toml`](netlify.toml) (racine) : `base = GrainorApp`, `command = npm ci && npm run
+  build:web`, `publish = dist` (**relatif à `base`**). Déploiement auto à chaque push.
 
 ---
 
@@ -118,8 +137,15 @@ SVG `web/icons/icon.svg` et `web/icons/icon-maskable.svg`. Voir le `README.md` r
 
 Voir [`CHANGELOG.md`](CHANGELOG.md). En bref : les **8 écrans + navigation** sont implémentés et
 fidèles aux captures du handoff (Définition de « terminé » §9 couverte). Persistance locale des
-variétés/récoltes, import/export JSON, assistant IA (fiche complète + modèles gratuits live) et
-build/déploiement web (PWA Netlify) en place. Typecheck et build Android/web verts.
+variétés/récoltes, import/export JSON, assistant IA (fiche complète + modèles gratuits live),
+familles personnalisables, et build/déploiement web (PWA Netlify) en place. Typecheck et build
+Android/web verts.
+
+**Reprise (prochaine session)** — chantier principal : intégrer les **243 variétés du jardin**
+listées en §9. Approche envisagée : génération des fiches par lots via l'assistant IA → relecture
+→ chargement groupé par **import JSON** ; dédoublonner avec le jeu de démo ; trancher le périmètre
+fruitiers/arbres/ornementales (hors potager). Pense aussi aux **captures d'écran** réelles
+(`docs/screenshots/`) pour le README.
 
 ---
 
