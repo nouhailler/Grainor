@@ -44,6 +44,14 @@ export async function fetchFreeModels(key: string): Promise<AIModel[]> {
   return models;
 }
 
+/** Une étape de guide renvoyée par l'IA (titre + détail). */
+export interface AIStep {
+  titre?: string;
+  detail?: string;
+  t?: string;
+  d?: string;
+}
+
 /** Proposition renvoyée par l'IA (tous les champs sont optionnels et révisables). */
 export interface AIProposal {
   nom?: string;
@@ -55,29 +63,54 @@ export interface AIProposal {
   genre?: string;
   espece?: string;
   cycle?: string;
-  dureeMin?: number;
-  dureeMax?: number;
-  semis?: string;
+  type?: string;
+  semisDebut?: number;
+  semisFin?: number;
+  recolteDebut?: number;
+  recolteFin?: number;
   recolteMois?: string;
   profondeur?: string;
   levee?: string;
   espacement?: string;
-  type?: string;
+  dureeMin?: number;
+  dureeMax?: number;
+  germination?: number;
+  origine?: string;
   difficulte?: string;
   reproduction?: string;
-  recolte?: string;
-  tri?: string;
-  germination?: string;
+  guideRecolte?: AIStep[];
+  guideTri?: AIStep[];
+  guideGermination?: AIStep[];
 }
 
 const SYSTEM_PROMPT =
-  'Tu es expert en semences potagères et en botanique. Pour la variété demandée, réponds ' +
-  'UNIQUEMENT par un objet JSON valide (aucun texte ni balise autour), avec ces clés : nom, ' +
-  'cultivar, latin, famille, classe, ordre, genre, espece, cycle ("Annuelle"|"Bisannuelle"|' +
-  '"Vivace"), dureeMin, dureeMax (entiers = années de faculté germinative), semis (ex "Mars – ' +
-  'Avril"), recolteMois, profondeur, levee, espacement, type, difficulte ("Facile"|"Moyen"|' +
-  '"Difficile"), reproduction (1 phrase sur autogamie/allogamie et isolement), recolte (2-3 ' +
-  'phrases), tri (2-3 phrases), germination (1-2 phrases). Tout en français.';
+  "Tu es expert en semences potagères et en botanique. Pour la variété demandée, réponds " +
+  "UNIQUEMENT par un objet JSON valide (aucun texte ni balise autour), TOUT en français, avec " +
+  "EXACTEMENT ces clés, toutes renseignées avec des valeurs réalistes (ne laisse AUCUN champ " +
+  "vide) :\n" +
+  '"nom" (nom commun), "cultivar" (nom de la variété), "latin" (binôme latin), ' +
+  '"famille" (famille botanique française, ex. Solanacées, Apiacées, Cucurbitacées, Fabacées, ' +
+  "Astéracées, Lamiacées, Brassicacées, Amaryllidacées, Amaranthacées), " +
+  '"classe", "ordre", "genre", "espece", ' +
+  '"cycle" ("Annuelle"|"Bisannuelle"|"Vivace"), "type" (ex. "Légume-fruit", "Aromatique"), ' +
+  '"semisDebut","semisFin","recolteDebut","recolteFin" (entiers 1-12 = numéros de mois), ' +
+  '"recolteMois" (libellé court, ex. "Juil. – Oct."), ' +
+  '"profondeur" (ex. "1 cm"), "levee" (ex. "6–10 j"), "espacement" (ex. "40 cm"), ' +
+  '"dureeMin","dureeMax" (entiers = années de faculté germinative), ' +
+  '"germination" (entier 0-100 = taux de germination typique), ' +
+  '"origine" (ex. "Variété ancienne"), ' +
+  '"difficulte" ("Facile"|"Moyen"|"Difficile"), ' +
+  '"reproduction" (1 phrase : autogamie/allogamie + isolement), ' +
+  '"guideRecolte","guideTri","guideGermination" : chacun un tableau de 2 à 4 étapes, ' +
+  'chaque étape = objet {"titre","detail"} (titre court ; detail = 1-2 phrases concrètes).';
+
+/** Convertit des étapes IA en étapes de guide internes {t,d}. */
+export function aiStepsToGuide(arr?: AIStep[]): { t: string; d: string }[] {
+  if (!Array.isArray(arr)) return [];
+  return arr
+    .map((s) => ({ t: String(s?.titre ?? s?.t ?? '').trim(), d: String(s?.detail ?? s?.d ?? '').trim() }))
+    .filter((s) => s.t || s.d);
+}
 
 /** Extrait un objet JSON, avec repli sur le premier bloc {…} trouvé. */
 export function parseAI(txt: string): AIProposal | null {

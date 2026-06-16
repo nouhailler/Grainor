@@ -134,8 +134,12 @@ Détails dans [`CONTEXT.md`](CONTEXT.md) et [`GrainorApp/src/logic/seeds.ts`](Gr
 - 🖼️ **Recherche d'image** — Wikimedia Commons (API publique, sans clé) + lien Google Images.
 - 🤖 **Assistant IA** — [OpenRouter](https://openrouter.ai/). Une fois la clé enregistrée, l'app
   récupère la **liste live de tous les modèles gratuits** (sélection persistée). Depuis le
-  **Catalogue**, une recherche sans résultat propose de **créer la variété avec l'IA**. La
-  proposition de l'IA est toujours **validée par l'utilisateur** avant d'être enregistrée.
+  **Catalogue**, une recherche sans résultat propose de **créer la variété avec l'IA** : la
+  proposition remplit **toute** la fiche (germination, classification, culture, et le guide
+  Récolte · Tri · Germination) et reste **validée par l'utilisateur** avant enregistrement.
+- 💾 **Sauvegarde / restauration** — variétés et récoltes **persistées localement** ; **export /
+  import JSON** dans les Paramètres pour changer de téléphone sans rien perdre. Le bouton
+  **Modifier** d'une fiche ouvre un formulaire d'édition.
 
 > 🔐 **Sécurité — important.** La clé API OpenRouter est saisie dans les Paramètres et stockée
 > dans le **stockage local sécurisé** de l'appareil (`expo-secure-store`). Elle n'est **jamais**

@@ -9,7 +9,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Linking,
+  Platform,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -25,7 +27,7 @@ import { colors, fonts, radius, spacing } from '../theme/tokens';
 
 export function ParametresScreen() {
   const nav = useNavigation<any>();
-  const { apiKey, aiModel, saveApiKey } = useApp();
+  const { apiKey, aiModel, saveApiKey, exportData, importData } = useApp();
   const [key, setKey] = useState(apiKey);
   const [model, setModel] = useState(aiModel);
   const [saved, setSaved] = useState(false);
@@ -87,6 +89,49 @@ export function ParametresScreen() {
     const q = filter.trim().toLowerCase();
     return q ? models.filter((m) => m.label.toLowerCase().includes(q) || m.value.toLowerCase().includes(q)) : models;
   }, [models, filter]);
+
+  // ── Sauvegarde & restauration (JSON) ───────────────────────────────
+  const [exportJson, setExportJson] = useState('');
+  const [importText, setImportText] = useState('');
+  const [ioMsg, setIoMsg] = useState('');
+  const [ioErr, setIoErr] = useState('');
+
+  const onExport = async () => {
+    const json = exportData();
+    setExportJson(json);
+    setIoErr('');
+    if (Platform.OS === 'web') {
+      try {
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `grainor-sauvegarde-${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch {}
+    } else {
+      try {
+        await Share.share({ message: json });
+      } catch {}
+    }
+  };
+
+  const onImport = () => {
+    setIoMsg('');
+    setIoErr('');
+    try {
+      const res = importData(importText);
+      setImportText('');
+      setIoMsg(
+        res.replaced
+          ? `Sauvegarde restaurée : ${res.seeds} variété(s)${res.harvests ? `, ${res.harvests} récolte(s)` : ''}.`
+          : `${res.seeds} variété(s) ajoutée(s) au catalogue.`,
+      );
+    } catch (e: any) {
+      setIoErr(e?.message ? `JSON invalide : ${e.message}` : 'JSON invalide.');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -192,6 +237,57 @@ export function ParametresScreen() {
           )}
         </Card>
 
+        {/* Sauvegarde & restauration */}
+        <SectionLabel style={{ marginTop: 24, marginBottom: 11 }}>Sauvegarde & restauration</SectionLabel>
+        <Card style={styles.card}>
+          <Text style={styles.desc}>
+            Exportez vos variétés et récoltes en JSON pour ne rien perdre en changeant de téléphone,
+            ou importez une sauvegarde / des variétés.
+          </Text>
+
+          <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
+            <TouchableOpacity style={styles.ioBtn} activeOpacity={0.85} onPress={onExport}>
+              <Icon name="box" size={16} color={colors.onPrimary} />
+              <Text style={styles.ioBtnText}>Exporter</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.ioBtnOutline} activeOpacity={0.7} onPress={onImport}>
+              <Icon name="plus" size={16} color={colors.primary} strokeWidth={2} />
+              <Text style={styles.ioBtnOutlineText}>Importer</Text>
+            </TouchableOpacity>
+          </View>
+
+          {!!exportJson && (
+            <>
+              <SectionLabel style={styles.fieldLabel}>Sauvegarde (copier / partager)</SectionLabel>
+              <TextInput
+                value={exportJson}
+                editable={false}
+                multiline
+                style={[styles.input, styles.jsonArea]}
+                selectTextOnFocus
+              />
+              <Text style={styles.ioHint}>
+                {Platform.OS === 'web' ? 'Fichier téléchargé. ' : 'Partagé. '}
+                Vous pouvez aussi sélectionner et copier ce texte.
+              </Text>
+            </>
+          )}
+
+          <SectionLabel style={styles.fieldLabel}>Importer un JSON</SectionLabel>
+          <TextInput
+            value={importText}
+            onChangeText={setImportText}
+            placeholder='Collez ici une sauvegarde ou une liste de variétés…'
+            placeholderTextColor={colors.textPlaceholder}
+            multiline
+            style={[styles.input, styles.jsonArea]}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          {!!ioMsg && <Text style={styles.ioOk}>{ioMsg}</Text>}
+          {!!ioErr && <Text style={styles.error}>{ioErr}</Text>}
+        </Card>
+
         {/* À propos */}
         <SectionLabel style={{ marginTop: 24, marginBottom: 11 }}>À propos</SectionLabel>
         <Card style={styles.card}>
@@ -260,6 +356,32 @@ const styles = StyleSheet.create({
   },
   saveOk: { backgroundColor: '#4F7A3F' },
   saveText: { fontFamily: fonts.sansSemi, fontSize: 15, color: colors.onPrimary },
+  ioBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: 13,
+  },
+  ioBtnText: { fontFamily: fonts.sansSemi, fontSize: 14, color: colors.onPrimary },
+  ioBtnOutline: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: 13,
+  },
+  ioBtnOutlineText: { fontFamily: fonts.sansSemi, fontSize: 14, color: colors.primary },
+  jsonArea: { minHeight: 96, textAlignVertical: 'top', fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', fontSize: 11.5 },
+  ioHint: { fontFamily: fonts.sans, fontSize: 11.5, color: colors.textFaint, marginTop: 8, lineHeight: 16 },
+  ioOk: { fontFamily: fonts.sansSemi, fontSize: 12.5, color: '#4F7A3F', marginTop: 12 },
   about: { fontFamily: fonts.sans, fontSize: 13, color: colors.textBody, lineHeight: 20 },
   aboutMeta: { marginTop: 14, paddingTop: 13, borderTopWidth: 1, borderTopColor: colors.divider, flexDirection: 'row', justifyContent: 'space-between' },
   aboutMetaText: { fontFamily: fonts.sansSemi, fontSize: 11.5, color: colors.textFaint },

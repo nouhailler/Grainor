@@ -288,7 +288,11 @@ export function DetailScreen() {
           >
             <Text style={styles.primaryBtnText}>Noter une récolte</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.outlineBtn} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.outlineBtn}
+            activeOpacity={0.7}
+            onPress={() => nav.navigate('Ajout', { editId: sel.id })}
+          >
             <Text style={styles.outlineBtnText}>Modifier</Text>
           </TouchableOpacity>
         </View>

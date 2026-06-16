@@ -8,6 +8,17 @@ et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 ## [Non publié]
 
 ### Ajouté
+- **Fiche IA complète** — l'assistant remplit désormais *tous* les champs : taux de germination,
+  classification botanique (classe/ordre/genre/espèce), profondeur/levée/espacement, fenêtre de
+  semis et de récolte, et surtout le guide **Récolte · Tri · Germination** (étapes numérotées).
+  La variété créée est immédiatement exploitable.
+- **Bouton « Modifier » fonctionnel** — la fiche d'une variété ouvre un formulaire d'édition
+  pré‑rempli ; les champs structurés et le guide sont préservés s'ils ne sont pas modifiés.
+- **Persistance locale des variétés et récoltes** — les ajouts, modifications et récoltes notées
+  survivent au redémarrage (AsyncStorage), en plus des photos et de la clé.
+- **Import / export JSON (Paramètres)** — export d'une sauvegarde (variétés + récoltes + photos,
+  téléchargement web / partage natif) et import (restauration complète ou ajout de variétés) pour
+  changer de téléphone sans rien perdre.
 - **Modèles gratuits dynamiques (Paramètres)** — une fois la clé OpenRouter enregistrée (et
   validée par l'appel), la **liste live de tous les modèles gratuits** est récupérée
   (`GET /api/v1/models`, filtrés sur `:free` / tarif nul), filtrable, et le choix est **persisté**
@@ -24,7 +35,6 @@ et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 
 ### À venir
 - Captures d'écran prises sur appareil/navigateur (dossier `docs/screenshots/`).
-- Persistance des variétés ajoutées et des récoltes saisies (actuellement en mémoire).
 
 ---
 

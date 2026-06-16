@@ -86,8 +86,8 @@ export function enrich(s: RawSeed) {
   const familyColor = FAMS[s.famille] || '#7A7363';
   const g = germColors(s.germ);
   const cy = CYCLE[s.cycle] ?? CYCLE.annuelle;
-  const guide = GUIDES[s.id] ?? DEFAULT_GUIDE;
-  const dm = DIFF[guide.diff];
+  const guide = s.guide ?? GUIDES[s.id] ?? DEFAULT_GUIDE;
+  const dm = DIFF[guide.diff] ?? DIFF.Moyen;
   const v = viability(s);
   return {
     ...s,

@@ -48,6 +48,8 @@ export interface RawSeed {
   espacement: string;
   recolteMois: string;
   notes: string;
+  /** Guide de récupération porté par la variété (variétés ajoutées / IA). */
+  guide?: SeedGuide;
 }
 
 export interface RawHarvest {

@@ -3,7 +3,7 @@
  * La proposition de l'IA est une AIDE : elle pré-remplit le formulaire, l'utilisateur valide.
  */
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -16,8 +16,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon } from '../components/Icon';
 import { Dot, SectionLabel, TopBar } from '../components/ui';
-import { RawSeed } from '../data/seeds';
-import { AIProposal, askOpenRouter } from '../logic/ai';
+import { GUIDES, RawSeed, SeedGuide } from '../data/seeds';
+import { aiStepsToGuide, AIProposal, askOpenRouter } from '../logic/ai';
+import { DIFF, DiffKey } from '../theme/tokens';
 import type { RootStackParamList } from '../navigation/types';
 import { useApp } from '../store/AppContext';
 import { colors, CYCLE, CycleKey, FAMS, fonts, spacing } from '../theme/tokens';
@@ -47,13 +48,35 @@ export function AjoutScreen() {
   const nav = useNavigation<any>();
   const route = useRoute<RouteProp<RootStackParamList, 'Ajout'>>();
   const initialQuery = route.params?.query ?? '';
-  const { apiKey, aiModel, seeds, addSeed } = useApp();
+  const editId = route.params?.editId;
+  const { apiKey, aiModel, seeds, rawSeeds, addSeed, updateSeed } = useApp();
+
+  // Mode édition : on part de la variété existante et on préserve ses champs structurés.
+  const original = useMemo(() => rawSeeds.find((s) => s.id === editId), [rawSeeds, editId]);
+  const editMode = original != null;
 
   const [query, setQuery] = useState(initialQuery);
   const [loading, setLoading] = useState(false);
   const [aiError, setAiError] = useState('');
-  const [proposal, setProposal] = useState<AIProposal | null>(null);
-  const [form, setForm] = useState<Form>(EMPTY);
+  const [proposalOpen, setProposalOpen] = useState(false);
+  const [aiData, setAiData] = useState<AIProposal | null>(null); // payload IA conservé pour l'enregistrement
+  const [form, setForm] = useState<Form>(() =>
+    original
+      ? {
+          nom: original.nom,
+          cultivar: original.cultivar === '—' ? '' : original.cultivar,
+          latin: original.latin === '—' ? '' : original.latin,
+          famille: original.famille,
+          cycle: original.cycle,
+          duree: original.longMin === original.longMax ? `${original.longMax}` : `${original.longMin}-${original.longMax}`,
+          recolte: original.recolte === '—' ? '' : original.recolte,
+          qty: original.qty ? String(original.qty) : '',
+          stockage: original.stockage === '—' ? '' : original.stockage,
+          germ: original.germ ? String(original.germ) : '',
+          origine: original.origine,
+        }
+      : EMPTY,
+  );
 
   const set = (k: keyof Form, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -66,10 +89,11 @@ export function AjoutScreen() {
     if (!name) return;
     setLoading(true);
     setAiError('');
-    setProposal(null);
+    setProposalOpen(false);
     try {
       const p = await askOpenRouter(name, apiKey, aiModel);
-      setProposal(p);
+      setAiData(p);
+      setProposalOpen(true);
     } catch (e: any) {
       setAiError(e?.message || 'Échec de la requête.');
     } finally {
@@ -81,30 +105,31 @@ export function AjoutScreen() {
   const autoRan = useRef(false);
   useEffect(() => {
     if (autoRan.current) return;
-    if (initialQuery && apiKey) {
+    if (initialQuery && apiKey && !editMode) {
       autoRan.current = true;
       runAI(initialQuery);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialQuery, apiKey]);
+  }, [initialQuery, apiKey, editMode]);
 
+  // Remplit le formulaire visible depuis la proposition (les champs structurés restent dans aiData).
   const applyProposal = () => {
-    if (!proposal) return;
-    const cy = (proposal.cycle || '').toLowerCase();
+    const p = aiData;
+    if (!p) return;
+    const cy = (p.cycle || '').toLowerCase();
     const cycle = (CYCLE_KEYS.find((k) => k === cy) ?? 'annuelle') as CycleKey;
     setForm((f) => ({
       ...f,
-      nom: proposal.nom || f.nom,
-      cultivar: proposal.cultivar || f.cultivar,
-      latin: proposal.latin || f.latin,
-      famille: FAMS[proposal.famille || ''] ? proposal.famille! : f.famille,
+      nom: p.nom || f.nom,
+      cultivar: p.cultivar || f.cultivar,
+      latin: p.latin || f.latin,
+      famille: FAMS[p.famille || ''] ? p.famille! : f.famille,
       cycle,
-      duree:
-        proposal.dureeMin != null && proposal.dureeMax != null
-          ? `${proposal.dureeMin}-${proposal.dureeMax}`
-          : f.duree,
+      duree: p.dureeMin != null && p.dureeMax != null ? `${p.dureeMin}-${p.dureeMax}` : f.duree,
+      germ: p.germination != null ? String(p.germination) : f.germ,
+      origine: p.origine || f.origine,
     }));
-    setProposal(null);
+    setProposalOpen(false);
   };
 
   const canSave = form.nom.trim() !== '' && form.famille !== '';
@@ -112,47 +137,63 @@ export function AjoutScreen() {
   const save = () => {
     if (!canSave) return;
     const [dMin, dMax] = parseDuree(form.duree);
-    const nextId = Math.max(0, ...seeds.map((s) => s.id)) + 1;
+    const p = aiData;
+    // Repli : guide porté par la variété, sinon guide de démo (GUIDES) en édition.
+    const guideFallback = original ? original.guide ?? GUIDES[original.id] : undefined;
+    const guide = buildGuide(p, guideFallback);
+
+    // Champs structurés : priorité au payload IA, puis à la variété d'origine (édition), puis défaut.
+    const pick = (ai: any, orig: any, def = '—') =>
+      ai != null && ai !== '' ? String(ai) : orig != null && orig !== '' ? String(orig) : def;
+
+    const id = editMode ? original!.id : Math.max(0, ...seeds.map((s) => s.id)) + 1;
     const seed: RawSeed = {
-      id: nextId,
+      id,
       nom: form.nom.trim(),
       cultivar: form.cultivar.trim() || '—',
       latin: form.latin.trim() || '—',
       famille: form.famille,
-      classe: proposal?.classe || '—',
-      ordre: proposal?.ordre || '—',
-      genre: proposal?.genre || '—',
-      espece: proposal?.espece || '—',
+      classe: pick(p?.classe, original?.classe),
+      ordre: pick(p?.ordre, original?.ordre),
+      genre: pick(p?.genre, original?.genre),
+      espece: pick(p?.espece, original?.espece),
       cycle: form.cycle,
-      sd: 3, se: 4, rd: 7, re: 9,
+      sd: clampMonth(p?.semisDebut, original?.sd ?? 3),
+      se: clampMonth(p?.semisFin, original?.se ?? 4),
+      rd: clampMonth(p?.recolteDebut, original?.rd ?? 7),
+      re: clampMonth(p?.recolteFin, original?.re ?? 9),
       qty: parseInt(form.qty, 10) || 0,
-      germ: parseInt(form.germ, 10) || 0,
+      germ: parseInt(form.germ, 10) || p?.germination || 0,
       recolte: form.recolte.trim() || '—',
-      recolteAnnee: parseAnnee(form.recolte),
+      recolteAnnee: parseAnnee(form.recolte) || original?.recolteAnnee || 2026,
       longMin: dMin,
       longMax: dMax,
       origine: form.origine.trim() || 'Saisie manuelle',
-      zone: 'A',
+      zone: original?.zone ?? 'A',
       stockage: form.stockage.trim() || '—',
-      type: proposal?.type || '—',
-      profondeur: proposal?.profondeur || '—',
-      levee: proposal?.levee || '—',
-      espacement: proposal?.espacement || '—',
-      recolteMois: proposal?.recolteMois || '—',
-      notes: proposal?.reproduction || '',
+      type: pick(p?.type, original?.type),
+      profondeur: pick(p?.profondeur, original?.profondeur),
+      levee: pick(p?.levee, original?.levee),
+      espacement: pick(p?.espacement, original?.espacement),
+      recolteMois: pick(p?.recolteMois, original?.recolteMois),
+      notes: form.nom && p?.reproduction ? p.reproduction : original?.notes ?? '',
+      guide,
     };
-    addSeed(seed);
-    nav.navigate('Detail', { seedId: nextId });
+    if (editMode) updateSeed(seed);
+    else addSeed(seed);
+    nav.navigate('Detail', { seedId: id });
   };
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <TopBar title="Ajouter une graine" onBack={() => nav.goBack()} />
+      <TopBar title={editMode ? 'Modifier la variété' : 'Ajouter une graine'} onBack={() => nav.goBack()} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: spacing.screenH, paddingBottom: 28 }}
         keyboardShouldPersistTaps="handled"
       >
+        {!editMode && (
+          <>
         {/* Assistant IA */}
         <View style={styles.aiCard}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -189,25 +230,36 @@ export function AjoutScreen() {
         </View>
 
         {/* Proposition IA à valider */}
-        {proposal && (
+        {proposalOpen && aiData && (
           <View style={styles.proposalCard}>
             <SectionLabel>Proposition de l'IA</SectionLabel>
             <Text style={styles.proposalNom}>
-              {proposal.nom} <Text style={styles.proposalCultivar}>{proposal.cultivar}</Text>
+              {aiData.nom} <Text style={styles.proposalCultivar}>{aiData.cultivar}</Text>
             </Text>
-            {!!proposal.latin && <Text style={styles.proposalLatin}>{proposal.latin}</Text>}
+            {!!aiData.latin && <Text style={styles.proposalLatin}>{aiData.latin}</Text>}
             <View style={styles.proposalGrid}>
-              {proposal.famille ? <ProposalChip label={proposal.famille} /> : null}
-              {proposal.cycle ? <ProposalChip label={proposal.cycle} /> : null}
-              {proposal.difficulte ? <ProposalChip label={`Récup. ${proposal.difficulte.toLowerCase()}`} /> : null}
-              {proposal.dureeMin != null ? <ProposalChip label={`${proposal.dureeMin}–${proposal.dureeMax} ans`} /> : null}
+              {aiData.famille ? <ProposalChip label={aiData.famille} /> : null}
+              {aiData.cycle ? <ProposalChip label={aiData.cycle} /> : null}
+              {aiData.germination != null ? <ProposalChip label={`Germ. ${aiData.germination}%`} /> : null}
+              {aiData.difficulte ? <ProposalChip label={`Récup. ${aiData.difficulte.toLowerCase()}`} /> : null}
+              {aiData.dureeMin != null ? <ProposalChip label={`${aiData.dureeMin}–${aiData.dureeMax} ans`} /> : null}
             </View>
-            {!!proposal.reproduction && <Text style={styles.proposalNote}>{proposal.reproduction}</Text>}
+            {!!aiData.reproduction && <Text style={styles.proposalNote}>{aiData.reproduction}</Text>}
+            <Text style={styles.proposalFoot}>
+              Classification, culture et guide (récolte · tri · germination) seront aussi renseignés.
+            </Text>
             <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
               <TouchableOpacity style={styles.useBtn} activeOpacity={0.85} onPress={applyProposal}>
                 <Text style={styles.useBtnText}>Utiliser cette proposition</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.dismissBtn} activeOpacity={0.7} onPress={() => setProposal(null)}>
+              <TouchableOpacity
+                style={styles.dismissBtn}
+                activeOpacity={0.7}
+                onPress={() => {
+                  setProposalOpen(false);
+                  setAiData(null);
+                }}
+              >
                 <Text style={styles.dismissText}>Ignorer</Text>
               </TouchableOpacity>
             </View>
@@ -234,6 +286,8 @@ export function AjoutScreen() {
           <Icon name="camera" size={17} color={colors.text} />
           <Text style={styles.cameraText}>Ouvrir l'appareil photo</Text>
         </TouchableOpacity>
+          </>
+        )}
 
         {/* Formulaire manuel */}
         <Field label="Nom" value={form.nom} onChange={(v) => set('nom', v)} placeholder="Tomate" />
@@ -295,7 +349,7 @@ export function AjoutScreen() {
         <Field label="Origine" value={form.origine} onChange={(v) => set('origine', v)} placeholder="Récolte maison" />
 
         <TouchableOpacity style={[styles.save, !canSave && styles.saveDisabled]} activeOpacity={0.85} disabled={!canSave} onPress={save}>
-          <Text style={styles.saveText}>Ajouter au catalogue</Text>
+          <Text style={styles.saveText}>{editMode ? 'Enregistrer les modifications' : 'Ajouter au catalogue'}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -344,6 +398,26 @@ function parseAnnee(s: string): number {
   const m = s.match(/\b(20\d{2})\b/);
   return m ? parseInt(m[1], 10) : 2026;
 }
+/** Numéro de mois valide (1-12), sinon valeur par défaut. */
+function clampMonth(v: any, def: number): number {
+  const n = Math.round(+v);
+  return Number.isFinite(n) && n >= 1 && n <= 12 ? n : def;
+}
+/** Construit le guide de récupération depuis la proposition IA (repli sur l'existant). */
+function buildGuide(p: AIProposal | null, fallback?: SeedGuide): SeedGuide | undefined {
+  const recolte = aiStepsToGuide(p?.guideRecolte);
+  const tri = aiStepsToGuide(p?.guideTri);
+  const germination = aiStepsToGuide(p?.guideGermination);
+  if (!recolte.length && !tri.length && !germination.length) return fallback;
+  const diff = (p?.difficulte && DIFF[p.difficulte as DiffKey] ? p.difficulte : fallback?.diff ?? 'Moyen') as DiffKey;
+  return {
+    diff,
+    note: p?.reproduction || fallback?.note || "Renseignez le mode de reproduction et l'isolement.",
+    recolte: recolte.length ? recolte : fallback?.recolte ?? [],
+    tri: tri.length ? tri : fallback?.tri ?? [],
+    germination: germination.length ? germination : fallback?.germination ?? [],
+  };
+}
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
@@ -371,6 +445,7 @@ const styles = StyleSheet.create({
   proposalLatin: { fontFamily: fonts.serifItalic, fontSize: 12.5, color: colors.textFaint, marginTop: 2 },
   proposalGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginTop: 11 },
   proposalNote: { fontFamily: fonts.sans, fontSize: 12.5, color: colors.textSubtle2, marginTop: 11, lineHeight: 18 },
+  proposalFoot: { fontFamily: fonts.sans, fontSize: 11.5, color: colors.textFaint, marginTop: 10, lineHeight: 16 },
   propChip: { backgroundColor: colors.surfaceAlt, borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingVertical: 4, paddingHorizontal: 11 },
   propChipText: { fontFamily: fonts.sansSemi, fontSize: 11.5, color: colors.textSubtle },
   useBtn: { flex: 1, backgroundColor: colors.primary, borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
