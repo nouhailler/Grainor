@@ -32,10 +32,11 @@ export function CatalogueScreen() {
   const families = useMemo(() => {
     const counts: Record<string, number> = {};
     seeds.forEach((s) => (counts[s.famille] = (counts[s.famille] || 0) + 1));
+    // Familles connues présentes, puis familles personnalisées (ajoutées / IA).
+    const known = Object.keys(FAMS).filter((f) => counts[f]);
+    const custom = Object.keys(counts).filter((f) => !FAMS[f]);
     return [{ key: 'all', label: 'Toutes', color: colors.primary, count: seeds.length }].concat(
-      Object.keys(FAMS)
-        .filter((f) => counts[f])
-        .map((f) => ({ key: f, label: f, color: FAMS[f], count: counts[f] })),
+      [...known, ...custom].map((f) => ({ key: f, label: f, color: FAMS[f] ?? colors.textFaint, count: counts[f] })),
     );
   }, [seeds]);
 

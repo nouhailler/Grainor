@@ -78,7 +78,15 @@ export function AjoutScreen() {
       : EMPTY,
   );
 
+  const [customFamily, setCustomFamily] = useState(original && !FAMS[original.famille] ? original.famille : '');
+
   const set = (k: keyof Form, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+  // Chips de famille : les 9 familles connues + la famille courante si elle est personnalisée.
+  const familyChips = useMemo(() => {
+    const base = Object.keys(FAMS);
+    return form.famille && !base.includes(form.famille) ? [...base, form.famille] : base;
+  }, [form.famille]);
 
   const runAI = async (nameArg?: string) => {
     if (!apiKey) {
@@ -123,12 +131,14 @@ export function AjoutScreen() {
       nom: p.nom || f.nom,
       cultivar: p.cultivar || f.cultivar,
       latin: p.latin || f.latin,
-      famille: FAMS[p.famille || ''] ? p.famille! : f.famille,
+      famille: (p.famille || '').trim() || f.famille,
       cycle,
       duree: p.dureeMin != null && p.dureeMax != null ? `${p.dureeMin}-${p.dureeMax}` : f.duree,
       germ: p.germination != null ? String(p.germination) : f.germ,
       origine: p.origine || f.origine,
     }));
+    const fam = (p.famille || '').trim();
+    setCustomFamily(fam && !FAMS[fam] ? fam : '');
     setProposalOpen(false);
   };
 
@@ -296,21 +306,38 @@ export function AjoutScreen() {
 
         <SectionLabel style={[styles.fieldLabel, { marginTop: 16 }]}>Famille</SectionLabel>
         <View style={styles.wrapRow}>
-          {Object.keys(FAMS).map((f) => {
+          {familyChips.map((f) => {
             const active = form.famille === f;
             return (
               <TouchableOpacity
                 key={f}
                 activeOpacity={0.7}
-                onPress={() => set('famille', f)}
+                onPress={() => {
+                  set('famille', f);
+                  setCustomFamily('');
+                }}
                 style={[styles.famChip, { backgroundColor: active ? colors.primary : colors.surface, borderColor: active ? colors.primary : colors.borderStrong }]}
               >
-                <Dot color={active ? colors.onPrimary : FAMS[f]} size={7} />
+                <Dot color={active ? colors.onPrimary : FAMS[f] ?? colors.textFaint} size={7} />
                 <Text style={[styles.famChipText, { color: active ? colors.onPrimary : colors.textBody }]}>{f}</Text>
               </TouchableOpacity>
             );
           })}
         </View>
+        <TextInput
+          value={customFamily}
+          onChangeText={(v) => {
+            setCustomFamily(v);
+            set('famille', v.trim());
+          }}
+          placeholder="Autre famille — à créer (ex. Rosacées)…"
+          placeholderTextColor={colors.textPlaceholder}
+          style={[styles.input, { marginTop: 8 }]}
+          autoCapitalize="words"
+        />
+        {form.famille !== '' && !FAMS[form.famille] && (
+          <Text style={styles.customFamHint}>Nouvelle famille « {form.famille} » (couleur neutre).</Text>
+        )}
 
         <SectionLabel style={[styles.fieldLabel, { marginTop: 16 }]}>Cycle</SectionLabel>
         <View style={styles.wrapRow}>
@@ -486,6 +513,7 @@ const styles = StyleSheet.create({
   wrapRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   famChip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 22, borderWidth: 1 },
   famChipText: { fontFamily: fonts.sansSemi, fontSize: 12.5 },
+  customFamHint: { fontFamily: fonts.sans, fontSize: 11.5, color: colors.primaryDim, marginTop: 7 },
   input: {
     backgroundColor: colors.surfaceInput,
     borderWidth: 1,
