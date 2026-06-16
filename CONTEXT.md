@@ -117,6 +117,265 @@ SVG `web/icons/icon.svg` et `web/icons/icon-maskable.svg`. Voir le `README.md` r
 ## 8. État d'avancement
 
 Voir [`CHANGELOG.md`](CHANGELOG.md). En bref : les **8 écrans + navigation** sont implémentés et
-fidèles aux captures du handoff (Définition de « terminé » §9 couverte). Typecheck et build
-Android verts. Reste surtout la persistance des variétés/récoltes ajoutées et le déploiement
-PWA Netlify.
+fidèles aux captures du handoff (Définition de « terminé » §9 couverte). Persistance locale des
+variétés/récoltes, import/export JSON, assistant IA (fiche complète + modèles gratuits live) et
+build/déploiement web (PWA Netlify) en place. Typecheck et build Android/web verts.
+
+---
+
+## 9. Backlog — variétés du jardin à intégrer
+
+> **À traiter plus tard** (gros volume). Liste fournie par l'utilisateur (son jardin). Chaque
+> entrée devra être enrichie en variété complète (classification botanique, cycle, fenêtres
+> semis/récolte, durée de faculté germinative, profondeur/levée/espacement, guide Récolte · Tri ·
+> Germination…), idéalement via l'assistant IA puis relecture. Certaines lignes sont des
+> fruitiers / arbres / ornementales / oléagineux : à décider si on étend le périmètre « potager »
+> ou si on crée des familles/catégories dédiées (le code couleur n'est défini que pour 9 familles
+> potagères). Liste conservée **verbatim**, à dédoublonner au moment de l'intégration (ex. Carotte
+> figure déjà dans le jeu de démo ; plusieurs variantes de Tomate/Courge/Chou/Laitue).
+
+### Variétés (verbatim)
+
+- [ ] Artichaut
+- [ ] Asperge
+- [ ] Aubergine
+- [ ] Bette
+- [ ] Betterave
+- [ ] Brocoli
+- [ ] Carotte
+- [ ] Céleri branche
+- [ ] Céleri rave
+- [ ] Chou blanc
+- [ ] Chou rouge
+- [ ] Chou frisé
+- [ ] Chou kale
+- [ ] Chou chinois
+- [ ] Chou-rave
+- [ ] Chou de Bruxelles
+- [ ] Chou Milan
+- [ ] Chou pointu
+- [ ] Chou cabus
+- [ ] Chou palmier
+- [ ] Concombre
+- [ ] Cornichon
+- [ ] Courge butternut
+- [ ] Courge musquée
+- [ ] Courge spaghetti
+- [ ] Courge patidou
+- [ ] Courgette
+- [ ] Cresson
+- [ ] Daikon
+- [ ] Endive
+- [ ] Épinard
+- [ ] Fenouil
+- [ ] Fève
+- [ ] Flageolet
+- [ ] Haricot vert
+- [ ] Haricot beurre
+- [ ] Haricot mungo
+- [ ] Haricot azuki
+- [ ] Laitue
+- [ ] Laitue romaine
+- [ ] Laitue batavia
+- [ ] Laitue feuille de chêne
+- [ ] Laitue iceberg
+- [ ] Mâche
+- [ ] Maïs doux
+- [ ] Melon
+- [ ] Mizuna
+- [ ] Navet
+- [ ] Oignon jaune
+- [ ] Oignon rouge
+- [ ] Oignon blanc
+- [ ] Oignon cébette
+- [ ] Pak choï
+- [ ] Panais
+- [ ] Patate douce
+- [ ] Pâtisson
+- [ ] Petit pois
+- [ ] Piment
+- [ ] Poireau
+- [ ] Poivron
+- [ ] Pomme de terre
+- [ ] Pourpier
+- [ ] Radis
+- [ ] Radis noir
+- [ ] Radis daikon
+- [ ] Raifort
+- [ ] Roquette
+- [ ] Rutabaga
+- [ ] Salsifis
+- [ ] Scorsonère
+- [ ] Topinambour
+- [ ] Tomate
+- [ ] Tomatillo
+- [ ] Ail
+- [ ] Échalote
+- [ ] Gingembre
+- [ ] Gombo
+- [ ] Potiron
+- [ ] Potimarron
+- [ ] Pois chiche vert
+- [ ] Pois mange-tout
+- [ ] Pois cassé
+- [ ] Rhubarbe
+- [ ] Roquette sauvage
+- [ ] Tétragone
+- [ ] Tomate cerise
+- [ ] Tomate prune
+- [ ] Tomate noire
+- [ ] Tomate jaune
+- [ ] Tomate ananas
+- [ ] Tomate raisin
+- [ ] Tomate italienne
+- [ ] Tomate verte
+- [ ] Topinambour rouge
+- [ ] Courge longue de Nice
+- [ ] Courge delicata
+- [ ] Courge kabocha
+- [ ] Courge turban
+- [ ] Courge Hubbard
+- [ ] Courge acorn
+- [ ] Courge buttercup
+- [ ] Courgette trompette
+- [ ] Oseille
+- [ ] Persil tubéreux
+- [ ] Piment doux
+- [ ] Piment fort
+- [ ] Quinoa feuille
+- [ ] Radis pastèque
+- [ ] Rave
+- [ ] Souchet comestible
+- [ ] Crosne du Japon
+- [ ] Dolique asperge
+- [ ] Épinard de Malabar
+- [ ] Amarante feuille
+- [ ] Arroche
+- [ ] Cardon
+- [ ] Chayote
+- [ ] Chicorée frisée
+- [ ] Chicorée scarole
+- [ ] Chou pak choi
+- [ ] Chou tatsoi
+- [ ] Chou mizuna
+- [ ] Chou komatsuna
+- [ ] Courge galeuse
+- [ ] Courge sucrine
+- [ ] Chou vert
+- [ ] Chou cavalier
+- [ ] Chou sibérien
+- [ ] Chou cabus précoce
+- [ ] Chou cabus tardif
+- [ ] Cerfeuil tubéreux
+- [ ] Claytone de Cuba
+- [ ] Margose
+- [ ] Moutarde brune
+- [ ] Okra
+- [ ] Oignon rocambole
+- [ ] Ortie potagère
+- [ ] Oseille sanguine
+- [ ] Pak choi nain
+- [ ] Laitue asperge
+- [ ] Haricot kilomètre
+- [ ] Courge miniature
+- [ ] Courge géante
+- [ ] Courge verte d'Italie
+- [ ] Zucchini
+- [ ] Wasabi
+- [ ] Catalonia
+- [ ] Bardane
+- [ ] Melon Charentais
+- [ ] Melon Cantaloup
+- [ ] Melon Galia
+- [ ] Melon Honeydew
+- [ ] Haricot grimpant
+- [ ] Fraise
+- [ ] Citrouille
+- [ ] Asperge blanche
+- [ ] Asperge violette
+- [ ] Betterave jaune
+- [ ] Betterave Chioggia
+- [ ] Aubergine blanche
+- [ ] Aubergine longue
+- [ ] Carotte Nantaise
+- [ ] Carotte Chantenay
+- [ ] Carotte violette
+- [ ] Concombre mini
+- [ ] Concombre de serre
+- [ ] Fraise remontante
+- [ ] Navet boule d'or
+- [ ] Navet de Milan
+- [ ] Poivron rouge
+- [ ] Poivron jaune
+- [ ] Poivron corne
+- [ ] Pomme de terre primeur
+- [ ] Pomme de terre à chair ferme
+- [ ] Pomme de terre vitelotte
+- [ ] Basilic
+- [ ] Persil plat
+- [ ] Ciboulette
+- [ ] Aneth
+- [ ] Coriandre
+- [ ] Estragon
+- [ ] Mélisse
+- [ ] Menthe
+- [ ] Origan
+- [ ] Romarin
+- [ ] Sauge
+- [ ] Sarriette
+- [ ] Thym
+- [ ] Cerfeuil
+- [ ] Bourrache
+- [ ] Livèche
+- [ ] Marjolaine
+- [ ] Laurier sauce
+- [ ] Lentille verte
+- [ ] Soja
+- [ ] Lupin blanc
+- [ ] Câprier
+- [ ] Carvi
+- [ ] Curcuma
+- [ ] Pastèque
+- [ ] Basilic thaï
+- [ ] Basilic pourpre
+- [ ] Basilic citron
+- [ ] Blé tendre
+- [ ] Blé dur
+- [ ] Blé noir
+- [ ] Épeautre
+- [ ] Petit épeautre
+- [ ] cerisier
+- [ ] pommier
+- [ ] poirier
+- [ ] kaki
+- [ ] kiwi
+- [ ] vigne
+- [ ] Mirabellier
+- [ ] prunier
+- [ ] noyer
+- [ ] groseiller
+- [ ] abricotier
+- [ ] pêcher
+- [ ] sésame
+- [ ] syringa
+- [ ] Viorne obier – Boule de neige
+- [ ] rhododendron cosmopolitan
+- [ ] ibéris
+- [ ] Aubrieta
+- [ ] Sedum album
+- [ ] banane
+- [ ] orange
+- [ ] cacahuete
+- [ ] pamplemousse
+- [ ] amandier
+- [ ] cajou
+- [ ] Macadamia
+- [ ] noix du brésil
+- [ ] citronnier
+- [ ] tournesol
+- [ ] mandarine
+- [ ] ananas
+- [ ] fruit de la passion
+- [ ] myrtille
+- [ ] verveine citron
+- [ ] groseillier à maquereau
