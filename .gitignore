@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Expo / Metro
+.expo/
+**/.expo/
+dist/
+web-build/
+expo-env.d.ts
+.metro-health-check*
+
+# Build / native
+/ios
+/android
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Logs & debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.tsbuildinfo
+
+# Secrets — NE JAMAIS committer (clé OpenRouter, env locaux)
+.env
+.env.*
+*.local
+secrets.json
+
+# Archives / artefacts
+Grainor.zip
+
+# OS / éditeur
+.DS_Store
+*.pem
+Thumbs.db

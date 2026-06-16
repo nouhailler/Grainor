@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  ::-webkit-scrollbar{ width:0; height:0; display:none; }
+  .gr-scroll{ scrollbar-width:none; -ms-overflow-style:none; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</helmet>
+
+<div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px; background:radial-gradient(120% 90% at 50% 0%, #f3ecdd 0%, #e7ddc9 60%, #ddd2bb 100%); font-family:'Hanken Grotesk', system-ui, sans-serif;">
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" width="412" height="892" hint-size="412px,892px">
+
+<div style="height:100%; position:relative; display:flex; flex-direction:column; background:#efe7d6; color:#2B271F; font-family:'Hanken Grotesk', system-ui, sans-serif;">
+  <main class="gr-scroll" style="flex:1; overflow-y:auto; overflow-x:hidden;">
+
+  <!-- ══════════════ ACCUEIL ══════════════ -->
+  <sc-if value="{{ isAccueil }}" hint-placeholder-val="{{ true }}">
+  <div style="padding-bottom:18px;">
+    <div style="padding:18px 20px 6px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:11px;">
+        <div style="width:36px; height:36px; border-radius:52% 52% 52% 8px; background:linear-gradient(155deg,#3C5B41,#2A4030); display:flex; align-items:center; justify-content:center; transform:rotate(-12deg); box-shadow:0 4px 10px rgba(42,64,48,0.28);">
+          <div style="width:7px; height:7px; border-radius:50%; background:#CFE0BE; transform:rotate(12deg);"></div>
+        </div>
+        <div>
+          <div style="font-family:'Newsreader',serif; font-size:21px; line-height:1; color:#2B271F; letter-spacing:0.01em;">Grainor</div>
+          <div style="font-size:10.5px; color:#9A917F; letter-spacing:0.08em; text-transform:uppercase; margin-top:3px;">Semences · Maraîchage</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div onClick="{{ goParametres }}" style="width:36px; height:36px; border-radius:50%; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E5848" stroke-width="1.8"><line x1="4" y1="8" x2="20" y2="8" stroke-linecap="round"></line><circle cx="15" cy="8" r="2.3"></circle><line x1="4" y1="16" x2="20" y2="16" stroke-linecap="round"></line><circle cx="9" cy="16" r="2.3"></circle></svg>
+        </div>
+        <div style="width:36px; height:36px; border-radius:50%; background:#E2EAD6; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; color:#33503B;">C</div>
+      </div>
+    </div>
+
+    <div style="padding:14px 20px 0;">
+      <div style="font-size:13px; color:#8C8270;">Dimanche 15 juin</div>
+      <div style="font-family:'Newsreader',serif; font-size:27px; line-height:1.1; color:#2B271F; margin-top:3px;">Bonjour, Camille</div>
+    </div>
+
+    <div onClick="{{ goCatalogue }}" style="margin:15px 20px 0; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:14px; padding:12px 14px; display:flex; align-items:center; gap:11px; color:#9A917F; font-size:14px; cursor:pointer;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9A917F" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round"></line></svg>
+      <span>Rechercher une variété, une famille…</span>
+    </div>
+
+    <div style="padding:18px 20px 0; display:grid; grid-template-columns:1fr 1fr; gap:11px;">
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:13px 14px;">
+        <div style="font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600;">Variétés</div>
+        <div style="font-family:'Newsreader',serif; font-size:30px; color:#2B271F; line-height:1; margin-top:7px;">{{ varCount }}</div>
+        <div style="font-size:11px; color:#9A917F; margin-top:3px;">au catalogue</div>
+      </div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:13px 14px;">
+        <div style="font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600;">Graines stockées</div>
+        <div style="font-family:'Newsreader',serif; font-size:30px; color:#2B271F; line-height:1; margin-top:7px;">{{ totalSeedsFmt }}</div>
+        <div style="font-size:11px; color:#9A917F; margin-top:3px;">dans 5 zones</div>
+      </div>
+      <div style="background:#33503B; border-radius:16px; padding:13px 14px;">
+        <div style="font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:#A9C29A; font-weight:600;">À semer en juin</div>
+        <div style="font-family:'Newsreader',serif; font-size:30px; color:#F4EFE2; line-height:1; margin-top:7px;">{{ aSemerCount }}</div>
+        <div style="font-size:11px; color:#BFD2B2; margin-top:3px;">variétés prêtes</div>
+      </div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:13px 14px;">
+        <div style="font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600;">Germination moy.</div>
+        <div style="font-family:'Newsreader',serif; font-size:30px; color:#2B271F; line-height:1; margin-top:7px;">{{ avgGerm }} %</div>
+        <div style="font-size:11px; color:#9A917F; margin-top:3px;">{{ varCount }} lots testés</div>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:baseline; justify-content:space-between; padding:24px 20px 0;">
+      <div style="font-family:'Newsreader',serif; font-size:18px; color:#2B271F;">À semer ce mois-ci</div>
+      <div onClick="{{ goCalendrier }}" style="font-size:12.5px; color:#6E8466; font-weight:600; cursor:pointer;">Calendrier →</div>
+    </div>
+    <div class="gr-scroll" style="display:flex; gap:12px; overflow-x:auto; padding:13px 20px 4px;">
+      <sc-for list="{{ aSemerList }}" as="item" hint-placeholder-count="4">
+        <div onClick="{{ item.open }}" style="flex:0 0 156px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; overflow:hidden; cursor:pointer;">
+          <div style="height:6px; background:{{ item.familyColor }};"></div>
+          <div style="padding:12px 13px 13px;">
+            <div style="font-family:'Newsreader',serif; font-size:17px; color:#2B271F; line-height:1.15;">{{ item.nom }}</div>
+            <div style="font-size:11.5px; font-style:italic; color:#9A917F; margin-top:1px;">{{ item.cultivar }}</div>
+            <div style="display:inline-flex; align-items:center; gap:5px; margin-top:10px; padding:3px 8px; border-radius:20px; background:{{ item.famSoft }};">
+              <span style="width:6px; height:6px; border-radius:50%; background:{{ item.familyColor }};"></span>
+              <span style="font-size:10.5px; font-weight:600; color:{{ item.familyColor }};">{{ item.famille }}</span>
+            </div>
+            <div style="font-size:11px; color:#8C8270; margin-top:12px;">Semis {{ item.semisLabel }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="padding:22px 20px 0;">
+      <div style="font-family:'Newsreader',serif; font-size:18px; color:#2B271F;">À surveiller</div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:13px;">
+        <sc-for list="{{ alertList }}" as="a" hint-placeholder-count="3">
+          <div onClick="{{ a.open }}" style="display:flex; align-items:center; gap:12px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:14px; padding:12px 13px; cursor:pointer;">
+            <div style="width:38px; height:38px; border-radius:11px; background:{{ a.soft }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ a.color }}" stroke-width="1.9"><path d="M12 4 3 19h18L12 4Z" stroke-linejoin="round"></path><line x1="12" y1="10" x2="12" y2="14" stroke-linecap="round"></line><circle cx="12" cy="16.6" r="0.6" fill="{{ a.color }}"></circle></svg>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:14px; font-weight:600; color:#2B271F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ a.title }}</div>
+              <div style="font-size:12px; color:#8C8270; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ a.detail }}</div>
+            </div>
+            <div style="font-size:10.5px; font-weight:600; color:{{ a.color }}; background:{{ a.soft }}; padding:5px 9px; border-radius:20px; white-space:nowrap; flex-shrink:0;">{{ a.tag }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="padding:22px 20px 4px;">
+      <div style="display:flex; align-items:baseline; justify-content:space-between;">
+        <div style="font-family:'Newsreader',serif; font-size:18px; color:#2B271F;">Dernières récoltes</div>
+        <div onClick="{{ goRecoltes }}" style="font-size:12.5px; color:#6E8466; font-weight:600; cursor:pointer;">Tout voir →</div>
+      </div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:4px 14px; margin-top:13px;">
+        <sc-for list="{{ recoltesRecent }}" as="r" hint-placeholder-count="3">
+          <div onClick="{{ r.open }}" style="display:flex; align-items:center; gap:11px; padding:12px 0; border-bottom:1px solid rgba(80,60,30,0.08); cursor:pointer;">
+            <span style="width:9px; height:9px; border-radius:50%; background:{{ r.familyColor }}; flex-shrink:0;"></span>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:13.5px; color:#2B271F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.nom }} <span style="color:#9A917F; font-style:italic;">{{ r.cultivar }}</span></div>
+              <div style="font-size:11px; color:#9A917F; margin-top:1px;">{{ r.dateLabel }} · {{ r.qteFmt }} gr</div>
+            </div>
+            <span style="font-size:10px; font-weight:600; color:{{ r.statusColor }}; background:{{ r.statusSoft }}; padding:4px 8px; border-radius:20px; white-space:nowrap; flex-shrink:0;">{{ r.statusLabel }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════ CATALOGUE ══════════════ -->
+  <sc-if value="{{ isCatalogue }}">
+  <div style="padding-bottom:14px;">
+    <div style="padding:18px 20px 0;">
+      <div style="display:flex; align-items:baseline; justify-content:space-between;">
+        <div style="font-family:'Newsreader',serif; font-size:25px; color:#2B271F;">Catalogue</div>
+        <div style="font-size:12.5px; color:#8C8270;">{{ filteredCount }} variétés</div>
+      </div>
+      <div style="margin-top:14px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:14px; padding:11px 13px; display:flex; align-items:center; gap:10px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9A917F" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round"></line></svg>
+        <input value="{{ search }}" onChange="{{ onSearch }}" placeholder="Nom, nom latin, famille…" style="border:none; outline:none; background:transparent; font-family:'Hanken Grotesk',sans-serif; font-size:14px; color:#2B271F; width:100%;" />
+      </div>
+    </div>
+
+    <div class="gr-scroll" style="display:flex; gap:8px; overflow-x:auto; padding:14px 20px 2px;">
+      <sc-for list="{{ families }}" as="c" hint-placeholder-count="6">
+        <div onClick="{{ c.pick }}" style="flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:7px 13px; border-radius:22px; background:{{ c.chipBg }}; border:1px solid {{ c.chipBorder }}; cursor:pointer;">
+          <sc-if value="{{ c.dotShow }}"><span style="width:7px; height:7px; border-radius:50%; background:{{ c.color }};"></span></sc-if>
+          <span style="font-size:12.5px; font-weight:600; color:{{ c.chipColor }};">{{ c.label }}</span>
+          <span style="font-size:11px; color:{{ c.chipColor }}; opacity:0.6;">{{ c.count }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="padding:14px 20px 0; display:flex; flex-direction:column; gap:11px;">
+      <sc-for list="{{ filtered }}" as="item" hint-placeholder-count="6">
+        <div onClick="{{ item.open }}" style="display:flex; align-items:center; gap:13px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:13px; cursor:pointer;">
+          <div style="width:48px; height:48px; border-radius:13px; background:{{ item.familyColor }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="font-family:'Newsreader',serif; font-size:18px; color:#FBF7EE;">{{ item.initials }}</span>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:baseline; gap:7px;">
+              <span style="font-family:'Newsreader',serif; font-size:17px; color:#2B271F;">{{ item.nom }}</span>
+              <span style="font-size:12.5px; font-style:italic; color:#9A917F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ item.cultivar }}</span>
+            </div>
+            <div style="font-size:11.5px; font-style:italic; color:#9A917F; margin-top:1px;">{{ item.latin }}</div>
+            <div style="display:flex; align-items:center; gap:6px; margin-top:7px;">
+              <span style="display:inline-flex; align-items:center; padding:3px 8px; border-radius:20px; background:{{ item.famSoft }}; font-size:10.5px; font-weight:600; color:{{ item.familyColor }};">{{ item.famille }}</span>
+              <span style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:20px; background:{{ item.cycleSoft }}; font-size:10.5px; font-weight:600; color:{{ item.cycleColor }};">{{ item.cycleLabel }}</span>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0;">
+            <div style="font-size:13px; font-weight:600; color:#2B271F;">{{ item.qtyFmt }} <span style="font-weight:400; color:#9A917F; font-size:11px;">gr</span></div>
+            <div style="display:flex; align-items:center; gap:5px; background:{{ item.germSoft }}; padding:3px 8px; border-radius:20px;">
+              <span style="font-size:11px; font-weight:700; color:{{ item.germColor }};">{{ item.germ }} %</span>
+            </div>
+            <div style="font-size:9.5px; font-weight:600; color:{{ item.vcolor }};">{{ item.vlabel }}</div>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{ filteredEmpty }}">
+        <div style="text-align:center; padding:40px 20px; color:#9A917F;">
+          <div style="font-family:'Newsreader',serif; font-size:18px; color:#8C8270;">Aucune variété</div>
+          <div style="font-size:13px; margin-top:6px;">Essayez un autre filtre ou terme de recherche.</div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════ FICHE DÉTAIL ══════════════ -->
+  <sc-if value="{{ isDetail }}">
+  <div style="padding-bottom:18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px 6px;">
+      <div onClick="{{ doBack }}" style="width:38px; height:38px; border-radius:50%; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B271F" stroke-width="2"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:#9A917F; font-weight:600;">Fiche variété</div>
+      <div style="width:38px; height:38px; border-radius:50%; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#2B271F"><circle cx="12" cy="5" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="12" cy="19" r="1.6"></circle></svg>
+      </div>
+    </div>
+
+    <div style="margin:6px 20px 0; height:172px; border-radius:20px; overflow:hidden; position:relative; background:{{ sel.heroStripe }}; border:1px solid rgba(80,60,30,0.10); display:flex; align-items:center; justify-content:center;">
+      <sc-if value="{{ sel.hasPhoto }}">{{ sel.photoEl }}</sc-if>
+      <sc-if value="{{ sel.noPhoto }}">
+        <span style="font-family:'Courier New',monospace; font-size:12px; letter-spacing:0.04em; color:{{ sel.familyColor }}; opacity:0.8;">[ photo · {{ sel.nom }} ]</span>
+      </sc-if>
+      <div style="position:absolute; left:12px; top:12px; display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:20px; background:#FBF7EE;">
+        <span style="width:7px; height:7px; border-radius:50%; background:{{ sel.familyColor }};"></span>
+        <span style="font-size:11px; font-weight:600; color:{{ sel.familyColor }};">{{ sel.famille }}</span>
+      </div>
+      <div onClick="{{ sel.openImg }}" style="position:absolute; right:12px; bottom:12px; display:inline-flex; align-items:center; gap:6px; padding:7px 11px; border-radius:20px; background:rgba(252,250,245,0.95); cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#33503B" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round"></line></svg>
+        <span style="font-size:11px; font-weight:600; color:#33503B;">Image</span>
+      </div>
+    </div>
+
+    <div style="padding:16px 20px 0;">
+      <div style="font-family:'Newsreader',serif; font-size:28px; line-height:1.05; color:#2B271F;">{{ sel.nom }}</div>
+      <div style="font-family:'Newsreader',serif; font-size:18px; font-style:italic; color:#5E5848; margin-top:2px;">{{ sel.cultivarQ }}</div>
+      <div style="font-size:13px; font-style:italic; color:#9A917F; margin-top:6px;">{{ sel.latin }} · {{ sel.type }}</div>
+    </div>
+
+    <div style="padding:13px 20px 0; display:flex; gap:8px; flex-wrap:wrap;">
+      <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border-radius:20px; background:{{ sel.cycleSoft }};">
+        <span style="width:7px; height:7px; border-radius:50%; background:{{ sel.cycleColor }};"></span>
+        <span style="font-size:12px; font-weight:600; color:{{ sel.cycleColor }};">{{ sel.cycleLabel }}</span>
+      </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border-radius:20px; background:{{ sel.vsoft }};">
+        <span style="font-size:12px; font-weight:600; color:{{ sel.vcolor }};">{{ sel.vlabel }} · {{ sel.vsub }}</span>
+      </span>
+    </div>
+
+    <div style="padding:16px 20px 0; display:grid; grid-template-columns:1fr 1fr; gap:11px;">
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:14px; padding:12px 13px;">
+        <div style="font-size:10.5px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600;">Récolte</div>
+        <div style="font-size:15px; color:#2B271F; margin-top:5px; font-weight:500;">{{ sel.recolte }}</div>
+      </div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:14px; padding:12px 13px;">
+        <div style="font-size:10.5px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600;">Quantité</div>
+        <div style="font-size:15px; color:#2B271F; margin-top:5px; font-weight:500;">{{ sel.qtyFmt }} graines</div>
+      </div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:14px; padding:12px 13px;">
+        <div style="font-size:10.5px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600;">Stockage</div>
+        <div style="font-size:15px; color:#2B271F; margin-top:5px; font-weight:500;">{{ sel.stockage }}</div>
+      </div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:14px; padding:12px 13px;">
+        <div style="font-size:10.5px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600;">Origine</div>
+        <div style="font-size:15px; color:#2B271F; margin-top:5px; font-weight:500;">{{ sel.origine }}</div>
+      </div>
+    </div>
+
+    <div style="margin:16px 20px 0; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:16px; display:flex; align-items:center; gap:16px;">
+      <div style="width:78px; height:78px; border-radius:50%; background:{{ sel.gaugeBg }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <div style="width:56px; height:56px; border-radius:50%; background:#FCFAF5; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <span style="font-family:'Newsreader',serif; font-size:20px; color:#2B271F; line-height:1;">{{ sel.germ }}%</span>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:13px; font-weight:600; color:#2B271F;">Taux de germination mesuré</div>
+        <div style="font-size:12px; color:#8C8270; margin-top:3px;">Viabilité {{ sel.germLabel }} · dernier test {{ sel.recolte }}</div>
+        <div style="display:inline-block; margin-top:9px; font-size:12px; font-weight:600; color:#33503B; background:#E2EAD6; padding:6px 12px; border-radius:20px; cursor:pointer;">Tester un échantillon</div>
+      </div>
+    </div>
+
+    <div style="margin:16px 20px 0; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:16px;">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div style="font-size:13px; font-weight:600; color:#2B271F;">Durée de conservation</div>
+        <div style="font-size:10.5px; font-weight:600; color:{{ sel.vcolor }}; background:{{ sel.vsoft }}; padding:5px 10px; border-radius:20px;">{{ sel.vlabel }}</div>
+      </div>
+      <div style="display:flex; align-items:baseline; gap:8px; margin-top:12px;">
+        <span style="font-family:'Newsreader',serif; font-size:24px; color:#2B271F;">{{ sel.longLabel }}</span>
+        <span style="font-size:12px; color:#8C8270;">de faculté germinative</span>
+      </div>
+      <div style="height:8px; border-radius:5px; background:#EAE0CE; overflow:hidden; margin-top:12px;">
+        <div style="height:100%; width:{{ sel.consW }}; background:{{ sel.vcolor }}; border-radius:5px;"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:9px;">
+        <span style="font-size:11.5px; color:#8C8270;">Récolte {{ sel.recolte }} · {{ sel.yearsStored }} an(s) en stock</span>
+        <span style="font-size:11.5px; font-weight:600; color:{{ sel.vcolor }};">{{ sel.vsub }}</span>
+      </div>
+    </div>
+
+    <div style="margin:16px 20px 0; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:16px;">
+      <div style="display:flex; align-items:baseline; justify-content:space-between;">
+        <div style="font-size:13px; font-weight:600; color:#2B271F;">Fenêtre de semis</div>
+        <div style="font-size:12px; color:#6E8466; font-weight:600;">{{ sel.semisLabel }}</div>
+      </div>
+      <div style="display:flex; gap:3px; margin-top:12px;">
+        <sc-for list="{{ sel.cells }}" as="c" hint-placeholder-count="12">
+          <div style="flex:1; height:20px; border-radius:4px; background:{{ c.bg }}; box-shadow:{{ c.sh }};"></div>
+        </sc-for>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:6px; padding:0 1px;">
+        <span style="font-size:9px; color:#A89E89;">J</span><span style="font-size:9px; color:#A89E89;">F</span><span style="font-size:9px; color:#A89E89;">M</span><span style="font-size:9px; color:#A89E89;">A</span><span style="font-size:9px; color:#A89E89;">M</span><span style="font-size:9px; color:#A89E89;">J</span><span style="font-size:9px; color:#A89E89;">J</span><span style="font-size:9px; color:#A89E89;">A</span><span style="font-size:9px; color:#A89E89;">S</span><span style="font-size:9px; color:#A89E89;">O</span><span style="font-size:9px; color:#A89E89;">N</span><span style="font-size:9px; color:#A89E89;">D</span>
+      </div>
+      <div style="font-size:12px; color:#8C8270; margin-top:11px; padding-top:11px; border-top:1px solid rgba(80,60,30,0.08);">Récolte estimée · <span style="color:#2B271F; font-weight:500;">{{ sel.recolteMois }}</span></div>
+    </div>
+
+    <div style="margin:18px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:9px;">Classification botanique</div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:4px 16px;">
+        <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid rgba(80,60,30,0.08);"><span style="font-size:12.5px; color:#8C8270;">Embranchement</span><span style="font-size:13px; color:#2B271F; font-weight:500;">{{ sel.embr }}</span></div>
+        <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid rgba(80,60,30,0.08);"><span style="font-size:12.5px; color:#8C8270;">Classe</span><span style="font-size:13px; color:#2B271F; font-weight:500;">{{ sel.classe }}</span></div>
+        <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid rgba(80,60,30,0.08);"><span style="font-size:12.5px; color:#8C8270;">Ordre</span><span style="font-size:13px; color:#2B271F; font-weight:500;">{{ sel.ordre }}</span></div>
+        <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid rgba(80,60,30,0.08);"><span style="font-size:12.5px; color:#8C8270;">Famille</span><span style="font-size:13px; color:#2B271F; font-weight:500;">{{ sel.famille }}</span></div>
+        <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid rgba(80,60,30,0.08);"><span style="font-size:12.5px; color:#8C8270;">Genre</span><span style="font-size:13px; color:#2B271F; font-weight:500; font-style:italic;">{{ sel.genre }}</span></div>
+        <div style="display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid rgba(80,60,30,0.08);"><span style="font-size:12.5px; color:#8C8270;">Espèce</span><span style="font-size:13px; color:#2B271F; font-weight:500; font-style:italic;">{{ sel.espece }}</span></div>
+        <div style="display:flex; justify-content:space-between; padding:11px 0;"><span style="font-size:12.5px; color:#8C8270;">Variété</span><span style="font-size:13px; color:#2B271F; font-weight:500;">{{ sel.cultivar }}</span></div>
+      </div>
+    </div>
+
+    <div style="margin:16px 20px 0; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:4px 16px;">
+      <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(80,60,30,0.08);"><span style="font-size:13px; color:#8C8270;">Profondeur de semis</span><span style="font-size:13px; color:#2B271F; font-weight:500;">{{ sel.profondeur }}</span></div>
+      <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(80,60,30,0.08);"><span style="font-size:13px; color:#8C8270;">Levée</span><span style="font-size:13px; color:#2B271F; font-weight:500;">{{ sel.levee }}</span></div>
+      <div style="display:flex; justify-content:space-between; padding:12px 0;"><span style="font-size:13px; color:#8C8270;">Espacement</span><span style="font-size:13px; color:#2B271F; font-weight:500;">{{ sel.espacement }}</span></div>
+    </div>
+
+    <div style="margin:18px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:9px;">Récupérer ses graines</div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="font-size:13px; font-weight:600; color:#2B271F;">Difficulté de récupération</div>
+          <div style="font-size:10.5px; font-weight:600; color:{{ sel.diffColor }}; background:{{ sel.diffSoft }}; padding:5px 11px; border-radius:20px;">{{ sel.diffLabel }}</div>
+        </div>
+        <div style="font-size:12px; color:#8C8270; margin-top:7px; line-height:1.5; text-wrap:pretty;">{{ sel.diffNote }}</div>
+        <div style="display:flex; gap:4px; margin-top:14px; background:#E7DDCB; border-radius:12px; padding:4px;">
+          <div onClick="{{ sel.setGuideRecolte }}" style="flex:1; text-align:center; padding:8px 4px; border-radius:9px; font-size:12.5px; font-weight:600; background:{{ sel.gtRecolteBg }}; color:{{ sel.gtRecolteColor }}; cursor:pointer;">Récolte</div>
+          <div onClick="{{ sel.setGuideTri }}" style="flex:1; text-align:center; padding:8px 4px; border-radius:9px; font-size:12.5px; font-weight:600; background:{{ sel.gtTriBg }}; color:{{ sel.gtTriColor }}; cursor:pointer;">Tri</div>
+          <div onClick="{{ sel.setGuideGerm }}" style="flex:1; text-align:center; padding:8px 4px; border-radius:9px; font-size:12.5px; font-weight:600; background:{{ sel.gtGermBg }}; color:{{ sel.gtGermColor }}; cursor:pointer;">Germination</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:14px; margin-top:16px;">
+          <sc-for list="{{ sel.guideSteps }}" as="st" hint-placeholder-count="3">
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <div style="width:25px; height:25px; border-radius:50%; background:#E2EAD6; color:#33503B; font-size:12.5px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ st.n }}</div>
+              <div style="flex:1;">
+                <div style="font-size:13.5px; font-weight:600; color:#2B271F;">{{ st.t }}</div>
+                <div style="font-size:12.5px; color:#6E6657; margin-top:3px; line-height:1.5; text-wrap:pretty;">{{ st.d }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin:18px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:9px;">Historique de récupération</div>
+      <sc-if value="{{ sel.hasHistory }}">
+        <div style="display:flex; flex-direction:column; gap:9px;">
+          <sc-for list="{{ sel.history }}" as="h" hint-placeholder-count="1">
+            <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:14px; padding:12px 13px;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:13.5px; font-weight:600; color:#2B271F;">{{ h.dateLabel }}</span>
+                <span style="font-size:10px; font-weight:600; color:{{ h.statusColor }}; background:{{ h.statusSoft }}; padding:4px 8px; border-radius:20px;">{{ h.statusLabel }}</span>
+              </div>
+              <div style="font-size:12px; color:#8C8270; margin-top:5px;">{{ h.methode }} · {{ h.qteFmt }} graines récupérées</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ sel.noHistory }}">
+        <div style="background:#FCFAF5; border:1px dashed rgba(80,60,30,0.18); border-radius:14px; padding:16px; text-align:center; font-size:12.5px; color:#9A917F;">Aucune récupération enregistrée pour cette variété.</div>
+      </sc-if>
+    </div>
+
+    <div style="margin:18px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600;">Notes</div>
+      <div style="font-size:14px; line-height:1.55; color:#4E4838; margin-top:7px; text-wrap:pretty;">{{ sel.notes }}</div>
+    </div>
+
+    <div style="display:flex; gap:11px; padding:20px 20px 0;">
+      <div onClick="{{ goRecolteAdd }}" style="flex:1; text-align:center; background:#33503B; color:#F4EFE2; font-size:14px; font-weight:600; padding:14px; border-radius:14px; cursor:pointer;">Noter une récolte</div>
+      <div style="flex:1; text-align:center; background:transparent; color:#33503B; border:1.5px solid #33503B; font-size:14px; font-weight:600; padding:14px; border-radius:14px; cursor:pointer;">Modifier</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════ RÉCOLTES ══════════════ -->
+  <sc-if value="{{ isRecoltes }}">
+  <div style="padding-bottom:14px;">
+    <div style="padding:18px 20px 0;">
+      <div style="font-family:'Newsreader',serif; font-size:25px; color:#2B271F;">Récoltes</div>
+      <div style="font-size:13px; color:#8C8270; margin-top:3px;">Journal de récupération des semences</div>
+    </div>
+
+    <div style="margin:16px 20px 0; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:18px; padding:15px;">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600;">Saison 2025 – 2026</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:12px;">
+        <div><div style="font-family:'Newsreader',serif; font-size:26px; color:#2B271F; line-height:1;">{{ recoltesCount }}</div><div style="font-size:11px; color:#9A917F; margin-top:4px;">récupérations</div></div>
+        <div><div style="font-family:'Newsreader',serif; font-size:26px; color:#2B271F; line-height:1;">{{ recoltesGrFmt }}</div><div style="font-size:11px; color:#9A917F; margin-top:4px;">graines récup.</div></div>
+        <div><div style="font-family:'Newsreader',serif; font-size:26px; color:#B08A2E; line-height:1;">{{ sechageCount }}</div><div style="font-size:11px; color:#9A917F; margin-top:4px;">en séchage</div></div>
+      </div>
+    </div>
+
+    <div onClick="{{ goRecolteAdd }}" style="margin:13px 20px 0; display:flex; align-items:center; justify-content:center; gap:8px; background:#33503B; color:#F4EFE2; font-size:14px; font-weight:600; padding:14px; border-radius:14px; cursor:pointer;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F4EFE2" stroke-width="2"><line x1="12" y1="6" x2="12" y2="18" stroke-linecap="round"></line><line x1="6" y1="12" x2="18" y2="12" stroke-linecap="round"></line></svg>
+      Noter une récolte
+    </div>
+
+    <div class="gr-scroll" style="display:flex; gap:8px; overflow-x:auto; padding:16px 20px 2px;">
+      <sc-for list="{{ recolteChips }}" as="c" hint-placeholder-count="4">
+        <div onClick="{{ c.pick }}" style="flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:7px 13px; border-radius:22px; background:{{ c.chipBg }}; border:1px solid {{ c.chipBorder }}; cursor:pointer;">
+          <span style="font-size:12.5px; font-weight:600; color:{{ c.chipColor }};">{{ c.label }}</span>
+          <span style="font-size:11px; color:{{ c.chipColor }}; opacity:0.6;">{{ c.count }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="padding:14px 20px 0; display:flex; flex-direction:column; gap:11px;">
+      <sc-for list="{{ filteredRecoltes }}" as="r" hint-placeholder-count="5">
+        <div onClick="{{ r.open }}" style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:14px; cursor:pointer;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:10px; height:10px; border-radius:50%; background:{{ r.familyColor }}; flex-shrink:0;"></span>
+            <span style="font-family:'Newsreader',serif; font-size:17px; color:#2B271F;">{{ r.nom }}</span>
+            <span style="font-size:12.5px; font-style:italic; color:#9A917F; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.cultivar }}</span>
+            <span style="font-size:10.5px; font-weight:600; color:{{ r.statusColor }}; background:{{ r.statusSoft }}; padding:5px 9px; border-radius:20px; flex-shrink:0;">{{ r.statusLabel }}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:11px;">
+            <span style="font-size:12px; color:#8C8270;">{{ r.dateLabel }}</span>
+            <span style="width:3px; height:3px; border-radius:50%; background:#C3B9A4;"></span>
+            <span style="font-size:11.5px; color:#5E5848; background:#F1ECE0; padding:3px 9px; border-radius:20px;">{{ r.methode }}</span>
+            <span style="flex:1;"></span>
+            <span style="font-size:13px; font-weight:600; color:#2B271F;">{{ r.qteFmt }} gr</span>
+          </div>
+          <div style="font-size:11.5px; color:#9A917F; margin-top:9px; text-wrap:pretty;">{{ r.notes }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════ NOTER UNE RÉCOLTE ══════════════ -->
+  <sc-if value="{{ isRecolteAdd }}">
+  <div style="padding-bottom:18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px 6px;">
+      <div onClick="{{ goRecoltes }}" style="width:34px; height:34px; border-radius:50%; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B271F" stroke-width="2"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="font-family:'Newsreader',serif; font-size:21px; color:#2B271F;">Noter une récolte</div>
+      <div style="width:34px;"></div>
+    </div>
+
+    <div style="padding:14px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:8px;">Variété récupérée</div>
+      <div class="gr-scroll" style="display:flex; gap:7px; overflow-x:auto;">
+        <sc-for list="{{ seedChips }}" as="s" hint-placeholder-count="6">
+          <div style="flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:8px 13px; border-radius:22px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12);">
+            <span style="width:7px; height:7px; border-radius:50%; background:{{ s.familyColor }};"></span>
+            <span style="font-size:12.5px; color:#4A4536;">{{ s.nom }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="padding:18px 20px 0; display:grid; grid-template-columns:1fr 1fr; gap:11px;">
+      <div>
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Date de récolte</div>
+        <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">JJ / MM / AAAA</div>
+      </div>
+      <div>
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Quantité (gr)</div>
+        <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">0</div>
+      </div>
+    </div>
+
+    <div style="padding:16px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:8px;">Méthode d'extraction</div>
+      <div style="display:flex; gap:7px; flex-wrap:wrap;">
+        <div style="padding:8px 13px; border-radius:22px; background:#33503B; color:#FBF7EE; font-size:12.5px; font-weight:600;">Battage</div>
+        <div style="padding:8px 13px; border-radius:22px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); color:#4A4536; font-size:12.5px;">Fermentation</div>
+        <div style="padding:8px 13px; border-radius:22px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); color:#4A4536; font-size:12.5px;">Extraction humide</div>
+        <div style="padding:8px 13px; border-radius:22px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); color:#4A4536; font-size:12.5px;">Écossage</div>
+      </div>
+    </div>
+
+    <div style="padding:16px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:8px;">Statut</div>
+      <div style="display:flex; gap:7px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:6px; padding:8px 13px; border-radius:22px; background:#F1E7CF; color:#B08A2E; font-size:12.5px; font-weight:600;"><span style="width:7px; height:7px; border-radius:50%; background:#B08A2E;"></span>Séchage en cours</div>
+        <div style="display:flex; align-items:center; gap:6px; padding:8px 13px; border-radius:22px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); color:#4A4536; font-size:12.5px;"><span style="width:7px; height:7px; border-radius:50%; background:#BC6A43;"></span>À trier</div>
+        <div style="display:flex; align-items:center; gap:6px; padding:8px 13px; border-radius:22px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); color:#4A4536; font-size:12.5px;"><span style="width:7px; height:7px; border-radius:50%; background:#4F7A3F;"></span>Séché &amp; stocké</div>
+      </div>
+    </div>
+
+    <div style="padding:16px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Notes</div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99; min-height:70px;">Maturité, conditions de séchage, observations…</div>
+    </div>
+
+    <div onClick="{{ goRecoltes }}" style="margin:20px 20px 0; text-align:center; background:#33503B; color:#F4EFE2; font-size:15px; font-weight:600; padding:15px; border-radius:14px; cursor:pointer;">Enregistrer la récolte</div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════ INVENTAIRE ══════════════ -->
+  <sc-if value="{{ isInventaire }}">
+  <div style="padding-bottom:14px;">
+    <div style="padding:18px 20px 0;">
+      <div style="font-family:'Newsreader',serif; font-size:25px; color:#2B271F;">Inventaire</div>
+      <div style="font-size:13px; color:#8C8270; margin-top:3px;">5 zones d'entreposage · {{ totalSeedsFmt }} graines</div>
+    </div>
+    <div style="padding:16px 20px 0; display:flex; flex-direction:column; gap:13px;">
+      <sc-for list="{{ zones }}" as="z" hint-placeholder-count="5">
+        <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:18px; padding:15px 15px 6px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:42px; height:42px; border-radius:12px; background:{{ z.colorSoft }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ z.color }}" stroke-width="1.7"><path d="M3 8l9-4 9 4-9 4-9-4Z" stroke-linejoin="round"></path><path d="M3 8v8l9 4 9-4V8" stroke-linejoin="round"></path><path d="M12 12v8"></path></svg>
+            </div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:15px; font-weight:600; color:#2B271F;">{{ z.name }}</div>
+              <div style="font-size:11.5px; color:#9A917F; margin-top:1px;">{{ z.cond }}</div>
+            </div>
+            <div style="text-align:right; flex-shrink:0;">
+              <div style="font-family:'Newsreader',serif; font-size:18px; color:#2B271F; line-height:1;">{{ z.nbVar }}</div>
+              <div style="font-size:10.5px; color:#9A917F;">variétés</div>
+            </div>
+          </div>
+          <div style="margin-top:13px;">
+            <div style="height:7px; border-radius:5px; background:#EAE0CE; overflow:hidden;">
+              <div style="height:100%; width:{{ z.barW }}; background:{{ z.barColor }}; border-radius:5px;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:6px;">
+              <span style="font-size:11.5px; color:#8C8270;">{{ z.totalFmt }} graines</span>
+              <span style="font-size:11.5px; color:#8C8270; font-weight:600;">{{ z.fill }} % occupé</span>
+            </div>
+          </div>
+          <div style="margin-top:6px; border-top:1px solid rgba(80,60,30,0.08);">
+            <sc-for list="{{ z.items }}" as="it" hint-placeholder-count="2">
+              <div onClick="{{ it.open }}" style="display:flex; align-items:center; gap:10px; padding:10px 0; cursor:pointer;">
+                <span style="width:9px; height:9px; border-radius:50%; background:{{ it.familyColor }}; flex-shrink:0;"></span>
+                <span style="font-family:'Newsreader',serif; font-size:15px; color:#2B271F;">{{ it.nom }}</span>
+                <span style="font-size:12px; font-style:italic; color:#9A917F; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ it.cultivar }}</span>
+                <span style="font-size:9.5px; font-weight:600; color:{{ it.vcolor }}; background:{{ it.vsoft }}; padding:3px 7px; border-radius:20px; flex-shrink:0;">{{ it.vlabel }}</span>
+                <span style="font-size:12.5px; color:#5E5848; font-weight:500; flex-shrink:0;">{{ it.qtyFmt }} gr</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════ CALENDRIER ══════════════ -->
+  <sc-if value="{{ isCalendrier }}">
+  <div style="padding-bottom:14px;">
+    <div style="padding:18px 20px 0;">
+      <div style="font-family:'Newsreader',serif; font-size:25px; color:#2B271F;">Calendrier</div>
+      <div style="display:flex; gap:4px; margin-top:14px; background:#E7DDCB; border-radius:13px; padding:4px;">
+        <div onClick="{{ calMois }}" style="flex:1; text-align:center; padding:9px; border-radius:10px; font-size:13px; font-weight:600; background:{{ segMoisBg }}; color:{{ segMoisColor }}; cursor:pointer;">Par mois</div>
+        <div onClick="{{ calAnnee }}" style="flex:1; text-align:center; padding:9px; border-radius:10px; font-size:13px; font-weight:600; background:{{ segAnneeBg }}; color:{{ segAnneeColor }}; cursor:pointer;">Agenda annuel</div>
+      </div>
+    </div>
+
+    <!-- vue par mois -->
+    <sc-if value="{{ isCalMois }}">
+    <div>
+      <div class="gr-scroll" style="display:flex; gap:8px; overflow-x:auto; padding:16px 20px 4px;">
+        <sc-for list="{{ monthChips }}" as="m" hint-placeholder-count="12">
+          <div onClick="{{ m.pick }}" style="flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:4px; min-width:48px; padding:9px 4px; border-radius:14px; background:{{ m.bg }}; border:1px solid {{ m.border }}; cursor:pointer;">
+            <span style="font-size:12.5px; font-weight:600; color:{{ m.color }};">{{ m.label }}</span>
+            <span style="width:5px; height:5px; border-radius:50%; background:{{ m.dotColor }};"></span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="padding:14px 20px 0;">
+        <div style="font-size:14px; color:#2B271F;"><span style="font-weight:700; font-family:'Newsreader',serif; font-size:18px;">{{ calCount }}</span> variétés à semer en <span style="font-weight:600;">{{ selectedMonthLabel }}</span></div>
+      </div>
+      <div style="padding:13px 20px 0; display:flex; flex-direction:column; gap:11px;">
+        <sc-for list="{{ calendarSeeds }}" as="s" hint-placeholder-count="6">
+          <div onClick="{{ s.open }}" style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:14px; cursor:pointer;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="width:10px; height:10px; border-radius:50%; background:{{ s.familyColor }}; flex-shrink:0;"></span>
+              <span style="font-family:'Newsreader',serif; font-size:17px; color:#2B271F;">{{ s.nom }}</span>
+              <span style="font-size:12.5px; font-style:italic; color:#9A917F; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ s.cultivar }}</span>
+              <span style="font-size:11px; font-weight:700; color:{{ s.germColor }}; flex-shrink:0;">{{ s.germ }} %</span>
+            </div>
+            <div style="display:flex; gap:3px; margin-top:13px;">
+              <sc-for list="{{ s.cells }}" as="c" hint-placeholder-count="12">
+                <div style="flex:1; height:16px; border-radius:3px; background:{{ c.bg }}; box-shadow:{{ c.sh }};"></div>
+              </sc-for>
+            </div>
+            <div style="font-size:11.5px; color:#8C8270; margin-top:9px;">Semis {{ s.semisLabel }} · levée {{ s.levee }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- vue agenda annuel -->
+    <sc-if value="{{ isCalAnnee }}">
+    <div style="padding:16px 20px 0;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:6px;">
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:8px; border-radius:2px; background:#6F8B4E;"></span><span style="font-size:11.5px; color:#8C8270;">Semis</span></div>
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:14px; height:8px; border-radius:2px; background:#9A7B4E;"></span><span style="font-size:11.5px; color:#8C8270;">Récolte</span></div>
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:14px; border-radius:3px; background:rgba(51,80,59,0.12);"></span><span style="font-size:11.5px; color:#8C8270;">Juin</span></div>
+      </div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:12px 12px 6px;">
+        <div style="display:flex; align-items:center; padding-left:84px; margin-bottom:8px;">
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">J</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">F</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">M</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">A</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">M</div>
+          <div style="flex:1; text-align:center; font-size:10px; color:#33503B; font-weight:700;">J</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">J</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">A</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">S</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">O</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">N</div>
+          <div style="flex:1; text-align:center; font-size:9px; color:#A89E89;">D</div>
+        </div>
+        <sc-for list="{{ agendaSeeds }}" as="s" hint-placeholder-count="11">
+          <div onClick="{{ s.open }}" style="display:flex; align-items:center; padding:5px 0; border-top:1px solid rgba(80,60,30,0.06); cursor:pointer;">
+            <div style="width:84px; flex-shrink:0; display:flex; align-items:center; gap:6px; padding-right:8px;">
+              <span style="width:7px; height:7px; border-radius:50%; background:{{ s.cycleColor }}; flex-shrink:0;"></span>
+              <span style="font-family:'Newsreader',serif; font-size:13px; color:#2B271F; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ s.nom }}</span>
+            </div>
+            <div style="flex:1; display:flex; gap:1px;">
+              <sc-for list="{{ s.cells }}" as="c" hint-placeholder-count="12">
+                <div style="flex:1; padding:2px 1px; background:{{ c.wrapBg }}; border-radius:3px; display:flex; flex-direction:column; gap:2px;">
+                  <div style="height:8px; border-radius:2px; background:{{ c.semisBg }};"></div>
+                  <div style="height:8px; border-radius:2px; background:{{ c.recolteBg }};"></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════ AJOUT / SCAN ══════════════ -->
+  <sc-if value="{{ isAjout }}">
+  <div style="padding-bottom:18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px 6px;">
+      <div style="font-family:'Newsreader',serif; font-size:23px; color:#2B271F;">Ajouter une graine</div>
+      <div onClick="{{ goAccueil }}" style="width:34px; height:34px; border-radius:50%; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2B271F" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"></line><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"></line></svg>
+      </div>
+    </div>
+
+    <div style="margin:10px 20px 0; background:linear-gradient(150deg,#33503B,#2A4030); border-radius:18px; padding:16px;">
+      <div style="display:flex; align-items:center; gap:9px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#CFE0BE"><path d="M12 2l1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7L12 2z"></path></svg>
+        <span style="font-size:15px; font-weight:600; color:#F4EFE2; white-space:nowrap;">Assistant IA</span>
+        <span style="font-size:10px; font-weight:700; color:#243A2B; background:#CFE0BE; padding:3px 8px; border-radius:20px;">gratuit</span>
+      </div>
+      <div style="font-size:12.5px; color:#BFD2B2; margin-top:8px; line-height:1.5;">Saisissez une variété (nom courant ou latin), l'IA renseigne la fiche automatiquement.</div>
+      <input value="{{ aiQuery }}" onChange="{{ onAiQuery }}" placeholder="ex. Aubergine de Barbentane" style="width:100%; margin-top:12px; border:none; border-radius:12px; padding:13px; font-family:'Hanken Grotesk',sans-serif; font-size:14px; color:#2B271F; background:#FBF7EE; outline:none;" />
+      <sc-if value="{{ hasKey }}">
+        <div onClick="{{ runAIh }}" style="margin-top:10px; text-align:center; background:#CFE0BE; color:#243A2B; font-size:14px; font-weight:700; padding:13px; border-radius:12px; cursor:pointer;">Remplir automatiquement</div>
+      </sc-if>
+      <sc-if value="{{ noKey }}">
+        <div onClick="{{ goParametres }}" style="margin-top:10px; text-align:center; background:rgba(255,255,255,0.14); color:#F4EFE2; font-size:13.5px; font-weight:600; padding:13px; border-radius:12px; cursor:pointer;">Configurer la clé API dans les Paramètres</div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ aiLoading }}">
+      <div style="margin:12px 20px 0; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:18px; display:flex; align-items:center; gap:12px;">
+        <div style="width:22px; height:22px; border-radius:50%; border:3px solid #E2EAD6; border-top-color:#33503B; animation:spin 0.8s linear infinite; flex-shrink:0;"></div>
+        <span style="font-size:13px; color:#5E5848;">Génération de la fiche…</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ aiErrorShow }}">
+      <div style="margin:12px 20px 0; background:#F3E2D5; border:1px solid rgba(188,106,67,0.3); border-radius:14px; padding:14px; font-size:12.5px; color:#9B4E2E; line-height:1.5;">{{ aiError }}</div>
+    </sc-if>
+    <sc-if value="{{ hasAiData }}">
+      <div style="margin:14px 20px 0; background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:18px; padding:16px;">
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#6E8466; font-weight:700; margin-bottom:8px;">Proposition de l'IA</div>
+        <div style="font-family:'Newsreader',serif; font-size:23px; color:#2B271F; line-height:1.1;">{{ aiView.nom }}</div>
+        <div style="font-size:13px; font-style:italic; color:#9A917F; margin-top:3px;">{{ aiView.latin }}</div>
+        <div style="display:flex; gap:7px; flex-wrap:wrap; margin-top:11px;">
+          <span style="padding:5px 11px; border-radius:20px; background:{{ aiView.famSoft }}; font-size:11px; font-weight:600; color:{{ aiView.famColor }};">{{ aiView.famille }}</span>
+          <span style="padding:5px 11px; border-radius:20px; background:{{ aiView.cycleSoft }}; font-size:11px; font-weight:600; color:{{ aiView.cycleColor }};">{{ aiView.cycleLabel }}</span>
+          <span style="padding:5px 11px; border-radius:20px; background:{{ aiView.diffSoft }}; font-size:11px; font-weight:600; color:{{ aiView.diffColor }};">Récup. {{ aiView.difficulte }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:14px; padding-top:12px; border-top:1px solid rgba(80,60,30,0.08);">
+          <span style="font-size:12.5px; color:#8C8270;">Durée germinative</span><span style="font-size:12.5px; color:#2B271F; font-weight:600;">{{ aiView.duree }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:8px;">
+          <span style="font-size:12.5px; color:#8C8270;">Semis</span><span style="font-size:12.5px; color:#2B271F; font-weight:600;">{{ aiView.semis }}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:8px;">
+          <span style="font-size:12.5px; color:#8C8270;">Genre · Espèce</span><span style="font-size:12.5px; color:#2B271F; font-weight:600; font-style:italic;">{{ aiView.espece }}</span>
+        </div>
+        <div style="font-size:12px; color:#6E6657; margin-top:12px; line-height:1.5; text-wrap:pretty;">{{ aiView.reproduction }}</div>
+        <div onClick="{{ goAccueil }}" style="margin-top:14px; text-align:center; background:#33503B; color:#F4EFE2; font-size:14px; font-weight:600; padding:13px; border-radius:13px; cursor:pointer;">Enregistrer la variété</div>
+      </div>
+    </sc-if>
+
+    <div style="display:flex; align-items:center; gap:12px; padding:22px 20px 8px;">
+      <div style="flex:1; height:1px; background:rgba(80,60,30,0.14);"></div>
+      <span style="font-size:11.5px; color:#9A917F;">ou via le scan / saisie manuelle</span>
+      <div style="flex:1; height:1px; background:rgba(80,60,30,0.14);"></div>
+    </div>
+
+    <div style="margin:8px 20px 0; height:188px; border-radius:18px; position:relative; background:repeating-linear-gradient(135deg, rgba(51,80,59,0.10) 0 12px, rgba(51,80,59,0.03) 12px 24px); border:1.5px dashed rgba(51,80,59,0.4); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+      <div style="position:absolute; left:14px; top:14px; width:22px; height:22px; border-left:2px solid #33503B; border-top:2px solid #33503B;"></div>
+      <div style="position:absolute; right:14px; top:14px; width:22px; height:22px; border-right:2px solid #33503B; border-top:2px solid #33503B;"></div>
+      <div style="position:absolute; left:14px; bottom:14px; width:22px; height:22px; border-left:2px solid #33503B; border-bottom:2px solid #33503B;"></div>
+      <div style="position:absolute; right:14px; bottom:14px; width:22px; height:22px; border-right:2px solid #33503B; border-bottom:2px solid #33503B;"></div>
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#33503B" stroke-width="1.6"><path d="M4 8V6a2 2 0 012-2h2"></path><path d="M16 4h2a2 2 0 012 2v2"></path><path d="M20 16v2a2 2 0 01-2 2h-2"></path><path d="M8 20H6a2 2 0 01-2-2v-2"></path><circle cx="12" cy="12" r="3.2"></circle></svg>
+      <div style="font-size:14px; font-weight:600; color:#33503B;">Scanner l'étiquette du sachet</div>
+      <div style="font-size:11.5px; color:#5E7A60; font-family:'Courier New',monospace;">cadrez le code ou la photo</div>
+    </div>
+    <div style="margin:12px 20px 0; text-align:center; background:#33503B; color:#F4EFE2; font-size:14px; font-weight:600; padding:13px; border-radius:13px; cursor:pointer;">Ouvrir l'appareil photo</div>
+
+    <div style="display:flex; align-items:center; gap:12px; padding:20px 20px 4px;">
+      <div style="flex:1; height:1px; background:rgba(80,60,30,0.14);"></div>
+      <span style="font-size:11.5px; color:#9A917F;">ou saisir manuellement</span>
+      <div style="flex:1; height:1px; background:rgba(80,60,30,0.14);"></div>
+    </div>
+
+    <div style="padding:10px 20px 0; display:flex; flex-direction:column; gap:13px;">
+      <div>
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Nom de la variété</div>
+        <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">ex. Tomate « Cœur de Bœuf »</div>
+      </div>
+      <div>
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Nom latin</div>
+        <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99; font-style:italic;">ex. Solanum lycopersicum</div>
+      </div>
+      <div>
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:8px;">Famille botanique</div>
+        <div class="gr-scroll" style="display:flex; gap:7px; overflow-x:auto;">
+          <sc-for list="{{ families }}" as="c" hint-placeholder-count="6">
+            <sc-if value="{{ c.dotShow }}">
+              <div style="flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:7px 12px; border-radius:22px; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12);">
+                <span style="width:7px; height:7px; border-radius:50%; background:{{ c.color }};"></span>
+                <span style="font-size:12.5px; color:#4A4536;">{{ c.label }}</span>
+              </div>
+            </sc-if>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:11px;">
+        <div>
+          <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Cycle</div>
+          <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">Annuelle…</div>
+        </div>
+        <div>
+          <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Durée germ. (ans)</div>
+          <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">ex. 1–2</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:11px;">
+        <div>
+          <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Date de récolte</div>
+          <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">JJ / MM / AAAA</div>
+        </div>
+        <div>
+          <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Quantité (gr)</div>
+          <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">0</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:11px;">
+        <div>
+          <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Lieu de stockage</div>
+          <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">Zone…</div>
+        </div>
+        <div>
+          <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Germination (%)</div>
+          <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">—</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:6px;">Origine</div>
+        <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); border-radius:12px; padding:13px; font-size:14px; color:#B5AC99;">Récolte maison, échange, fournisseur…</div>
+      </div>
+    </div>
+    <div onClick="{{ goAccueil }}" style="margin:20px 20px 0; text-align:center; background:#33503B; color:#F4EFE2; font-size:15px; font-weight:600; padding:15px; border-radius:14px; cursor:pointer;">Enregistrer la variété</div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════ PARAMÈTRES ══════════════ -->
+  <sc-if value="{{ isParametres }}">
+  <div style="padding-bottom:18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px 6px;">
+      <div onClick="{{ goAccueil }}" style="width:34px; height:34px; border-radius:50%; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B271F" stroke-width="2"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="font-family:'Newsreader',serif; font-size:21px; color:#2B271F;">Paramètres</div>
+      <div style="width:34px;"></div>
+    </div>
+
+    <div style="padding:14px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:9px;">Assistant IA — OpenRouter</div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:16px;">
+        <div style="font-size:13px; color:#4E4838; line-height:1.5; text-wrap:pretty;">Collez une clé <strong>OpenRouter</strong> pour activer le remplissage automatique des fiches. Des modèles gratuits sont utilisés ; la clé reste sur cet appareil.</div>
+        <a href="https://openrouter.ai/keys" target="_blank" rel="noopener" style="display:inline-block; margin-top:9px; font-size:12.5px; font-weight:600; color:#6E8466; text-decoration:none;">Obtenir une clé gratuite ↗</a>
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin:15px 0 6px;">Clé API</div>
+        <input value="{{ apiKey }}" onChange="{{ onApiKey }}" placeholder="sk-or-v1-…" style="width:100%; border:1px solid rgba(80,60,30,0.16); border-radius:12px; padding:12px 13px; font-family:'Hanken Grotesk',sans-serif; font-size:13px; color:#2B271F; background:#FFFDF8; outline:none;" />
+        <div style="font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:#8C8270; font-weight:600; margin:15px 0 6px;">Modèle (gratuit)</div>
+        <select value="{{ aiModel }}" onChange="{{ onModel }}" style="width:100%; border:1px solid rgba(80,60,30,0.16); border-radius:12px; padding:12px 13px; font-family:'Hanken Grotesk',sans-serif; font-size:13px; color:#2B271F; background:#FFFDF8; outline:none;">
+          <sc-for list="{{ modelOptions }}" as="m" hint-placeholder-count="4">
+            <option value="{{ m.value }}">{{ m.label }}</option>
+          </sc-for>
+        </select>
+        <div onClick="{{ saveKeyh }}" style="margin-top:16px; text-align:center; background:#33503B; color:#F4EFE2; font-size:14px; font-weight:600; padding:13px; border-radius:13px; cursor:pointer;">Enregistrer</div>
+        <sc-if value="{{ keySaved }}"><div style="text-align:center; font-size:12px; color:#4F7A3F; font-weight:600; margin-top:10px;">✓ Réglages enregistrés sur cet appareil</div></sc-if>
+      </div>
+    </div>
+
+    <div style="padding:18px 20px 0;">
+      <div style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:#8C8270; font-weight:600; margin-bottom:9px;">À propos</div>
+      <div style="background:#FCFAF5; border:1px solid rgba(80,60,30,0.10); border-radius:16px; padding:16px; font-size:12.5px; color:#8C8270; line-height:1.55;">Grainor conserve vos réglages et vos images choisies localement, sur cet appareil. Les seules requêtes externes vont vers Wikimedia (recherche d'images) et le service d'IA que vous configurez.</div>
+    </div>
+  </div>
+  </sc-if>
+
+  </main>
+
+  <!-- Recherche d'image -->
+  <sc-if value="{{ imgOpen }}">
+    <div style="position:absolute; inset:0; z-index:40; background:rgba(30,26,20,0.45); display:flex; flex-direction:column; justify-content:flex-end;">
+      <div style="background:#F4EEE2; border-radius:22px 22px 0 0; max-height:84%; display:flex; flex-direction:column; overflow:hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 18px 10px;">
+          <div style="font-family:'Newsreader',serif; font-size:19px; color:#2B271F;">Trouver une image</div>
+          <div onClick="{{ closeImg }}" style="width:32px; height:32px; border-radius:50%; background:#FCFAF5; border:1px solid rgba(80,60,30,0.12); display:flex; align-items:center; justify-content:center; cursor:pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2B271F" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18" stroke-linecap="round"></line><line x1="18" y1="6" x2="6" y2="18" stroke-linecap="round"></line></svg>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; padding:0 18px 10px;">
+          <input value="{{ imgQuery }}" onChange="{{ onImgQuery }}" placeholder="Nom de la plante…" style="flex:1; border:1px solid rgba(80,60,30,0.16); border-radius:12px; padding:11px 13px; font-family:'Hanken Grotesk',sans-serif; font-size:14px; color:#2B271F; background:#FFFDF8; outline:none;" />
+          <div onClick="{{ runImgh }}" style="background:#33503B; color:#F4EFE2; font-size:13px; font-weight:600; padding:11px 16px; border-radius:12px; cursor:pointer; display:flex; align-items:center;">Chercher</div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0 18px 8px;">
+          <span style="font-size:11px; color:#9A917F;">Wikimedia Commons · licences libres</span>
+          <a href="{{ imgGoogleUrl }}" target="_blank" rel="noopener" style="font-size:12px; font-weight:600; color:#6E8466; text-decoration:none;">Google Images ↗</a>
+        </div>
+        <div class="gr-scroll" style="overflow-y:auto; padding:6px 18px 22px;">
+          <sc-if value="{{ imgLoading }}"><div style="text-align:center; padding:30px; color:#9A917F; font-size:13px;">Recherche en cours…</div></sc-if>
+          <sc-if value="{{ imgErrorShow }}"><div style="text-align:center; padding:24px; color:#BC6A43; font-size:13px;">{{ imgError }}</div></sc-if>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <sc-for list="{{ imgResults }}" as="im" hint-placeholder-count="6">
+              <div onClick="{{ im.pick }}" style="aspect-ratio:1; border-radius:12px; overflow:hidden; background:#E7DECB; cursor:pointer; border:1px solid rgba(80,60,30,0.10);">{{ im.el }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- FAB flottant -->
+  <sc-if value="{{ showFab }}">
+    <div onClick="{{ goAjout }}" style="position:absolute; right:18px; bottom:80px; width:56px; height:56px; border-radius:18px; background:linear-gradient(155deg,#3C5B41,#2A4030); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 22px rgba(42,64,48,0.4); cursor:pointer; z-index:20;">
+      <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#F4EFE2" stroke-width="2.2"><line x1="12" y1="6" x2="12" y2="18" stroke-linecap="round"></line><line x1="6" y1="12" x2="18" y2="12" stroke-linecap="round"></line></svg>
+    </div>
+  </sc-if>
+
+  <!-- ══════════════ BOTTOM NAV ══════════════ -->
+  <nav style="flex-shrink:0; display:flex; align-items:center; justify-content:space-around; padding:9px 8px 10px; background:#FBF7EE; border-top:1px solid rgba(80,60,30,0.10);">
+    <div onClick="{{ goAccueil }}" style="display:flex; flex-direction:column; align-items:center; gap:4px; color:{{ navAccueilCol }}; cursor:pointer; width:62px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11.5 12 5l8 6.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 10.5V19h12v-8.5" stroke-linejoin="round"></path></svg>
+      <span style="font-size:9.5px; font-weight:600;">Accueil</span>
+    </div>
+    <div onClick="{{ goCatalogue }}" style="display:flex; flex-direction:column; align-items:center; gap:4px; color:{{ navCatalogueCol }}; cursor:pointer; width:62px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="7" r="1.3" fill="currentColor" stroke="none"></circle><line x1="9" y1="7" x2="20" y2="7" stroke-linecap="round"></line><circle cx="5" cy="12" r="1.3" fill="currentColor" stroke="none"></circle><line x1="9" y1="12" x2="20" y2="12" stroke-linecap="round"></line><circle cx="5" cy="17" r="1.3" fill="currentColor" stroke="none"></circle><line x1="9" y1="17" x2="20" y2="17" stroke-linecap="round"></line></svg>
+      <span style="font-size:9.5px; font-weight:600;">Catalogue</span>
+    </div>
+    <div onClick="{{ goRecoltes }}" style="display:flex; flex-direction:column; align-items:center; gap:4px; color:{{ navRecoltesCol }}; cursor:pointer; width:62px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 13v5a1 1 0 001 1h14a1 1 0 001-1v-5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 4v9" stroke-linecap="round"></path><path d="M8.5 9.5 12 13l3.5-3.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <span style="font-size:9.5px; font-weight:600;">Récoltes</span>
+    </div>
+    <div onClick="{{ goInventaire }}" style="display:flex; flex-direction:column; align-items:center; gap:4px; color:{{ navInventaireCol }}; cursor:pointer; width:62px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 8l9-4 9 4-9 4-9-4Z" stroke-linejoin="round"></path><path d="M3 8v8l9 4 9-4V8" stroke-linejoin="round"></path><path d="M12 12v8"></path></svg>
+      <span style="font-size:9.5px; font-weight:600;">Inventaire</span>
+    </div>
+    <div onClick="{{ goCalendrier }}" style="display:flex; flex-direction:column; align-items:center; gap:4px; color:{{ navCalendrierCol }}; cursor:pointer; width:62px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="2.5"></rect><line x1="4" y1="9.5" x2="20" y2="9.5"></line><line x1="8" y1="3" x2="8" y2="6" stroke-linecap="round"></line><line x1="16" y1="3" x2="16" y2="6" stroke-linecap="round"></line></svg>
+      <span style="font-size:9.5px; font-weight:600;">Calendrier</span>
+    </div>
+  </nav>
+</div>
+
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:480,&quot;height&quot;:960}}">
+class Component extends DCLogic {
+  state = { screen:'accueil', filter:'all', search:'', selectedId:1, prevScreen:'catalogue', selectedMonth:6, recolteFilter:'all', calView:'mois', guideTab:'recolte',
+    apiKey:'', aiModel:'meta-llama/llama-3.3-70b-instruct:free', aiQuery:'', aiLoading:false, aiError:'', aiData:null, keySaved:false,
+    photos:{}, imgOpen:false, imgSeedId:null, imgQuery:'', imgLoading:false, imgError:'', imgResults:[] };
+
+  MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'];
+  MONTHS_FULL = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  EMBR = 'Angiospermes';
+  FAMS = { 'Solanacées':'#BE5A3E','Apiacées':'#CB7A35','Cucurbitacées':'#C9952F','Fabacées':'#8A8A3A','Astéracées':'#6F8B4E','Lamiacées':'#8A6A8C','Brassicacées':'#3E7E72','Amaryllidacées':'#4E7E8A','Amaranthacées':'#9B4E63' };
+  CYCLE = {
+    annuelle:{label:'Annuelle', color:'#6F8B4E', soft:'#E6EBD7'},
+    bisannuelle:{label:'Bisannuelle', color:'#B08A2E', soft:'#F1E7CF'},
+    vivace:{label:'Vivace', color:'#3E7E72', soft:'#DCEAE5'},
+  };
+  STATUS = {
+    stocke:{label:'Séché & stocké', color:'#4F7A3F', soft:'#E3EBD6'},
+    sechage:{label:'Séchage en cours', color:'#B08A2E', soft:'#F1E7CF'},
+    trier:{label:'À trier', color:'#BC6A43', soft:'#F3E2D5'},
+  };
+  DIFF = { 'Facile':{color:'#4F7A3F',soft:'#E3EBD6'}, 'Moyen':{color:'#B08A2E',soft:'#F1E7CF'}, 'Difficile':{color:'#BC6A43',soft:'#F3E2D5'} };
+  GUIDES = {
+    1:{diff:'Moyen', note:"Autogame : ressemis fidèle, peu de croisements. La pulpe contient un gel inhibiteur qui impose une fermentation.",
+      recolte:[{t:"Choisir les fruits", d:"Récoltez des tomates bien mûres, voire un peu blettes, sur les pieds les plus sains et productifs."},{t:"Extraire la pulpe", d:"Coupez le fruit en deux et pressez graines + jus dans un bocal."},{t:"Fermenter 2 à 4 jours", d:"Laissez à température ambiante : la fermentation dissout le gel et élimine certaines maladies. Une mousse se forme en surface."}],
+      tri:[{t:"Rincer", d:"Versez dans une passoire fine et rincez : les graines pleines coulent, les vides et débris surnagent."},{t:"Sécher", d:"Étalez sur une assiette ou du papier sec (évitez l'essuie-tout qui colle) 1 à 2 semaines."}],
+      germination:[{t:"Semer au chaud", d:"Semis à 20–25 °C en godet, 0,5 cm de profondeur. Levée en 6–10 jours."},{t:"Repiquer", d:"Repiquez au stade 2 vraies feuilles, puis endurcissez avant plantation."}]},
+    2:{diff:'Difficile', note:"Bisannuelle et allogame : fleurit la 2ᵉ année et se croise facilement (carotte sauvage). Isolez les porte-graines. Semence à courte durée de vie.",
+      recolte:[{t:"Laisser monter", d:"Conservez quelques belles racines en terre l'hiver ; la 2ᵉ année, elles montent en ombelles."},{t:"Récolter les ombelles", d:"Coupez quand elles brunissent et se referment en « nid d'oiseau »."},{t:"Sécher", d:"Séchez les ombelles à l'abri, bien ventilées, 1 à 2 semaines."}],
+      tri:[{t:"Battre", d:"Frottez les ombelles entre les mains pour détacher les graines."},{t:"Nettoyer", d:"Retirez les « barbes » en frottant, tamisez puis ventilez doucement (graines très légères)."}],
+      germination:[{t:"Semer en place", d:"La carotte n'aime pas le repiquage : semez directement, 1 cm de profondeur."},{t:"Patienter", d:"Levée lente (12–18 j), gardez le sol humide. Utilisez des graines récentes : viabilité 1–2 ans."}]},
+    3:{diff:'Facile', note:"Allogame : risque de croisement entre variétés de Cucurbita pepo. Isolez ou pollinisez à la main.",
+      recolte:[{t:"Laisser mûrir un fruit", d:"Sacrifiez un fruit : laissez-le grossir bien au-delà du stade culinaire, jusqu'à peau dure (2–3 semaines de plus)."},{t:"Ressuyer", d:"Après cueillette, laissez le fruit mûrir encore 2–3 semaines à l'abri."},{t:"Extraire", d:"Ouvrez le fruit et prélevez les graines dans la pulpe."}],
+      tri:[{t:"Rincer", d:"Lavez les graines, retirez la pulpe ; les graines pleines coulent."},{t:"Sécher", d:"Faites sécher 1 à 2 semaines sur une claie."}],
+      germination:[{t:"Semer au chaud", d:"Semis à 18–20 °C, 2 cm de profondeur. Levée rapide en 5–8 jours."}]},
+    4:{diff:'Facile', note:"Autogame : ressemis très fidèle, idéal pour débuter la récupération de semences.",
+      recolte:[{t:"Sécher sur pied", d:"Laissez les gousses sécher sur la plante jusqu'à ce qu'elles soient brunes et cassantes."},{t:"Récolter au sec", d:"Cueillez avant les pluies ; finissez le séchage à l'abri si nécessaire."}],
+      tri:[{t:"Écosser", d:"Écossez à la main, ou battez les gousses dans un sac."},{t:"Trier", d:"Ventilez pour éliminer les débris et écartez les graines tachées (anthracnose)."}],
+      germination:[{t:"Semer après gelées", d:"Semis en place une fois tout risque de gel écarté, 3 cm. Levée 7–12 j."},{t:"Anti-bruche", d:"Optionnel : placez les graines 48 h au congélateur pour détruire les bruches."}]},
+    5:{diff:'Facile', note:"Autogame : récolte fidèle. Les graines mûrissent de façon échelonnée, comme un pissenlit.",
+      recolte:[{t:"Laisser fleurir", d:"Laissez la laitue monter en fleurs puis former des aigrettes plumeuses."},{t:"Récolter en plusieurs fois", d:"Quand environ la moitié des aigrettes sont blanches, secouez les têtes dans un seau tous les 2–3 jours."}],
+      tri:[{t:"Frotter", d:"Frottez et émiettez les têtes pour séparer graines et aigrettes."},{t:"Ventiler", d:"Soufflez doucement pour éliminer les aigrettes (graines légères)."}],
+      germination:[{t:"Semer en surface", d:"Semis superficiel (0,5 cm) : la graine germe à la lumière. Levée 4–7 j."},{t:"Semer au frais", d:"Au-dessus de 25 °C la germination se bloque (dormance) : semez tôt le matin ou à l'ombre."}]},
+    6:{diff:'Facile', note:"Croisements possibles entre variétés de basilic : isolez-les si vous tenez à la pureté.",
+      recolte:[{t:"Laisser sécher les épis", d:"Laissez fleurir puis sécher les hampes florales sur pied jusqu'à ce qu'elles brunissent."},{t:"Récolter", d:"Coupez les épis bruns et secs."}],
+      tri:[{t:"Frotter", d:"Frottez les épis pour libérer les petites graines noires."},{t:"Tamiser", d:"Tamisez finement et ventilez : les calices partent avec les déchets."}],
+      germination:[{t:"Semer au chaud", d:"Semis à 20 °C, graines à peine recouvertes. Levée 6–9 j."}]},
+    7:{diff:'Moyen', note:"Allogame : isolez des autres radis et Brassicacées. Gardez au moins 6 pieds pour la diversité génétique.",
+      recolte:[{t:"Laisser monter à graines", d:"Ne récoltez pas la racine : laissez le radis fleurir et former des siliques (cosses)."},{t:"Récolter les siliques", d:"Cueillez quand les siliques sont sèches et beige."}],
+      tri:[{t:"Battre", d:"Les siliques de radis sont coriaces : écrasez-les ou battez-les dans un sac solide."},{t:"Nettoyer", d:"Tamisez puis ventilez pour séparer graines et cosses."}],
+      germination:[{t:"Semer", d:"Semis 1 cm, levée très rapide en 3–5 j."}]},
+    8:{diff:'Difficile', note:"Bisannuelle et allogame : fleurit la 2ᵉ année, isolez des autres poireaux. Semence à courte durée de vie (2–3 ans).",
+      recolte:[{t:"Laisser fleurir", d:"Conservez quelques pieds en terre : la 2ᵉ année ils forment une grosse boule de fleurs (ombelle)."},{t:"Récolter", d:"Récoltez l'ombelle quand les capsules s'ouvrent et laissent voir les graines noires."}],
+      tri:[{t:"Égrener", d:"Séchez l'ombelle puis frottez pour extraire les graines noires."},{t:"Trier à l'eau", d:"Trempez : les graines pleines coulent, les vides flottent. Re-séchez rapidement."}],
+      germination:[{t:"Semer", d:"Semis 1 cm. Levée lente, 14–21 j."},{t:"Tester avant", d:"Faites un test de germination : la viabilité chute vite après 2–3 ans."}]},
+    9:{diff:'Difficile', note:"Bisannuelle et allogame (pollen porté loin par le vent) : isolez fortement. Se croise avec la bette et la betterave fourragère.",
+      recolte:[{t:"Conserver les racines", d:"Gardez les racines l'hiver (cave, sable), replantez au printemps pour la montée à graines."},{t:"Récolter les tiges", d:"Récoltez quand les glomérules sont secs et bruns."}],
+      tri:[{t:"Égrener", d:"Frottez les tiges pour détacher les glomérules (chaque glomérule = plusieurs graines soudées)."},{t:"Nettoyer", d:"Tamisez et ventilez."}],
+      germination:[{t:"Tremper puis semer", d:"Un trempage 24 h accélère la levée. Semis 2 cm, levée 8–14 j."}]},
+    10:{diff:'Moyen', note:"Dioïque (pieds mâles et femelles) et allogame par le vent : isolez. Conservez surtout les pieds femelles.",
+      recolte:[{t:"Repérer les pieds", d:"Gardez les pieds femelles (qui portent les graines) et quelques mâles pour la pollinisation."},{t:"Récolter", d:"Récoltez quand les tiges jaunissent et que les graines durcissent."}],
+      tri:[{t:"Égrener (avec des gants)", d:"Les graines peuvent être piquantes : frottez les tiges avec des gants pour les détacher."},{t:"Nettoyer", d:"Tamisez et ventilez."}],
+      germination:[{t:"Semer au frais", d:"Semis 2 cm : l'épinard germe mal au chaud. Levée 7–14 j."}]},
+    11:{diff:'Moyen', note:"Vivace : la touffe repart chaque année et se multiplie aussi par division. Graines à courte durée de vie (2–3 ans).",
+      recolte:[{t:"Laisser fleurir", d:"Laissez les boules roses fleurir puis former des capsules."},{t:"Récolter", d:"Récoltez les têtes quand les capsules brunissent et montrent des graines noires."}],
+      tri:[{t:"Frotter", d:"Séchez puis frottez les têtes pour libérer les graines noires."},{t:"Trier à l'eau", d:"Tamisez ; un trempage élimine les graines vides qui flottent."}],
+      germination:[{t:"Semer", d:"Semis 0,5 cm, levée 10–18 j. Renouvelez la semence souvent."}]},
+  };
+  ZONE_META = {
+    A:{name:'Étagère A — Bocaux verre', cond:'Sec · 15 °C · obscurité', cap:1000, color:'#9A7B3E'},
+    B:{name:'Bacs réfrigérés', cond:'Au frais · 4 °C · 35 % HR', cap:6000, color:'#4E7E8A'},
+    C:{name:'Bocaux hermétiques', cond:'Sec · gel de silice', cap:900, color:'#8A8A3A'},
+    D:{name:'Armoire — Sachets kraft', cond:'Ambiant · 18 °C', cap:4200, color:'#7A6A9A'},
+    E:{name:'Étagère B — Aromatiques', cond:'Sec · 15 °C', cap:1500, color:'#6E8466'},
+  };
+  RAW = [
+    {id:1, nom:'Tomate', cultivar:'Cœur de Bœuf', latin:'Solanum lycopersicum', famille:'Solanacées', classe:'Dicotylédones', ordre:'Solanales', genre:'Solanum', espece:'S. lycopersicum', cycle:'annuelle', sd:3, se:4, rd:7, re:10, qty:240, germ:92, recolte:'Sept. 2024', recolteAnnee:2024, longMin:4, longMax:6, origine:'Récolte maison', zone:'A', stockage:'Étagère A · Bocal 2', type:'Légume-fruit', profondeur:'0,5 cm', levee:'6–10 j', espacement:'60 cm', recolteMois:'Juil. – Oct.', notes:'Variété ancienne à gros fruits côtelés. Sélection sur les pieds les plus productifs et sains.'},
+    {id:2, nom:'Carotte', cultivar:'Nantaise 2', latin:'Daucus carota', famille:'Apiacées', classe:'Dicotylédones', ordre:'Apiales', genre:'Daucus', espece:'D. carota', cycle:'bisannuelle', sd:3, se:7, rd:6, re:11, qty:1850, germ:78, recolte:'Août 2024', recolteAnnee:2024, longMin:1, longMax:2, origine:'Ferme du Clos', zone:'B', stockage:'Bac réfrigéré B1', type:'Légume-racine', profondeur:'1 cm', levee:'12–18 j', espacement:'5 cm', recolteMois:'Juin – Nov.', notes:'Semis en place, éclaircir à 5 cm. Semence à courte durée de vie — à renouveler vite.'},
+    {id:3, nom:'Courgette', cultivar:'Ronde de Nice', latin:'Cucurbita pepo', famille:'Cucurbitacées', classe:'Dicotylédones', ordre:'Cucurbitales', genre:'Cucurbita', espece:'C. pepo', cycle:'annuelle', sd:4, se:5, rd:7, re:9, qty:60, germ:88, recolte:'Sept. 2023', recolteAnnee:2023, longMin:5, longMax:6, origine:'Récolte maison', zone:'A', stockage:'Étagère A · Bocal 1', type:'Légume-fruit', profondeur:'2 cm', levee:'5–8 j', espacement:'80 cm', recolteMois:'Juil. – Sept.', notes:'Fruits ronds à récolter jeunes. Stock faible — prévoir une multiplication cet été.'},
+    {id:4, nom:'Haricot', cultivar:'Tarbais', latin:'Phaseolus vulgaris', famille:'Fabacées', classe:'Dicotylédones', ordre:'Fabales', genre:'Phaseolus', espece:'P. vulgaris', cycle:'annuelle', sd:5, se:6, rd:9, re:10, qty:420, germ:95, recolte:'Oct. 2024', recolteAnnee:2024, longMin:3, longMax:4, origine:'Échange grainothèque', zone:'C', stockage:'Bocal hermétique C3', type:'Légumineuse', profondeur:'3 cm', levee:'7–12 j', espacement:'40 cm', recolteMois:'Sept. – Oct.', notes:'Haricot à rames, tuteurage indispensable. Excellente conservation au sec.'},
+    {id:5, nom:'Laitue', cultivar:'Reine de Mai', latin:'Lactuca sativa', famille:'Astéracées', classe:'Dicotylédones', ordre:'Asterales', genre:'Lactuca', espece:'L. sativa', cycle:'annuelle', sd:2, se:9, rd:4, re:10, qty:980, germ:71, recolte:'Juil. 2024', recolteAnnee:2024, longMin:4, longMax:5, origine:'Ferme du Clos', zone:'D', stockage:'Sachet kraft D2', type:'Légume-feuille', profondeur:'0,5 cm', levee:'4–7 j', espacement:'25 cm', recolteMois:'Avr. – Oct.', notes:'Semis échelonnés tous les 15 jours. Germination en baisse, à surveiller.'},
+    {id:6, nom:'Basilic', cultivar:'Grand Vert', latin:'Ocimum basilicum', famille:'Lamiacées', classe:'Dicotylédones', ordre:'Lamiales', genre:'Ocimum', espece:'O. basilicum', cycle:'annuelle', sd:4, se:6, rd:6, re:9, qty:1200, germ:84, recolte:'Sept. 2024', recolteAnnee:2024, longMin:4, longMax:5, origine:'Récolte maison', zone:'E', stockage:'Étagère B · Sachet 4', type:'Aromatique', profondeur:'0,5 cm', levee:'6–9 j', espacement:'20 cm', recolteMois:'Juin – Sept.', notes:'Semis au chaud (20 °C). Pincer les têtes pour favoriser la ramification.'},
+    {id:7, nom:'Radis', cultivar:'De 18 jours', latin:'Raphanus sativus', famille:'Brassicacées', classe:'Dicotylédones', ordre:'Brassicales', genre:'Raphanus', espece:'R. sativus', cycle:'annuelle', sd:3, se:9, rd:4, re:10, qty:2300, germ:90, recolte:'Juin 2024', recolteAnnee:2024, longMin:4, longMax:5, origine:'Lot fournisseur', zone:'B', stockage:'Bac réfrigéré B2', type:'Légume-racine', profondeur:'1 cm', levee:'3–5 j', espacement:'3 cm', recolteMois:'Avr. – Oct.', notes:'Croissance rapide, idéal en intercalaire. Gros stock disponible.'},
+    {id:8, nom:'Poireau', cultivar:'Bleu de Solaize', latin:'Allium porrum', famille:'Amaryllidacées', classe:'Monocotylédones', ordre:'Asparagales', genre:'Allium', espece:'A. porrum', cycle:'bisannuelle', sd:2, se:4, rd:10, re:3, qty:540, germ:64, recolte:'Août 2022', recolteAnnee:2022, longMin:2, longMax:3, origine:'Récolte maison', zone:'D', stockage:'Sachet kraft D5', type:'Légume-feuille', profondeur:'1 cm', levee:'14–21 j', espacement:'15 cm', recolteMois:'Oct. – Mars', notes:'Semence de 2022 hors durée germinative. Tester avant semis ou remplacer le lot.'},
+    {id:9, nom:'Betterave', cultivar:'Crapaudine', latin:'Beta vulgaris', famille:'Amaranthacées', classe:'Dicotylédones', ordre:'Caryophyllales', genre:'Beta', espece:'B. vulgaris', cycle:'bisannuelle', sd:4, se:6, rd:9, re:11, qty:760, germ:81, recolte:'Sept. 2024', recolteAnnee:2024, longMin:5, longMax:6, origine:'Échange grainothèque', zone:'B', stockage:'Bac réfrigéré B3', type:'Légume-racine', profondeur:'2 cm', levee:'8–14 j', espacement:'10 cm', recolteMois:'Sept. – Nov.', notes:'Variété ancienne à peau rugueuse, très rustique et sucrée.'},
+    {id:10, nom:'Épinard', cultivar:"Géant d'hiver", latin:'Spinacia oleracea', famille:'Amaranthacées', classe:'Dicotylédones', ordre:'Caryophyllales', genre:'Spinacia', espece:'S. oleracea', cycle:'annuelle', sd:8, se:9, rd:10, re:4, qty:1100, germ:58, recolte:'Juin 2021', recolteAnnee:2021, longMin:3, longMax:4, origine:'Récolte maison', zone:'D', stockage:'Sachet kraft D1', type:'Légume-feuille', profondeur:'2 cm', levee:'7–14 j', espacement:'10 cm', recolteMois:'Oct. – Avr.', notes:'Lot de 2021 hors durée de conservation (58 %). À écarter ou semer dense.'},
+    {id:11, nom:'Ciboulette', cultivar:'Commune', latin:'Allium schoenoprasum', famille:'Amaryllidacées', classe:'Monocotylédones', ordre:'Asparagales', genre:'Allium', espece:'A. schoenoprasum', cycle:'vivace', sd:3, se:6, rd:5, re:9, qty:320, germ:73, recolte:'Juil. 2024', recolteAnnee:2024, longMin:2, longMax:3, origine:'Récolte maison', zone:'E', stockage:'Étagère B · Sachet 6', type:'Aromatique', profondeur:'0,5 cm', levee:'10–18 j', espacement:'20 cm', recolteMois:'Mai – Sept.', notes:'Aromatique vivace : la touffe repart chaque année. Graines à courte durée de vie.'},
+  ];
+  HARVESTS = [
+    {id:1, seedId:1, dateLabel:'18 sept. 2025', sort:'2025-09-18', qte:240, methode:'Fermentation', status:'stocke', notes:'Fermentation 3 jours puis rinçage. Très bon rendement.'},
+    {id:2, seedId:4, dateLabel:'02 oct. 2025', sort:'2025-10-02', qte:420, methode:'Battage', status:'stocke', notes:'Gousses séchées sur pied, battage à la main.'},
+    {id:3, seedId:9, dateLabel:'10 sept. 2025', sort:'2025-09-10', qte:760, methode:'Battage', status:'trier', notes:'Glomérules à frotter et tamiser avant stockage.'},
+    {id:4, seedId:6, dateLabel:'28 août 2025', sort:'2025-08-28', qte:1200, methode:'Battage', status:'stocke', notes:'Hampes florales sèches, tamisage fin.'},
+    {id:5, seedId:3, dateLabel:'25 sept. 2025', sort:'2025-09-25', qte:60, methode:'Extraction humide', status:'sechage', notes:'Fruits laissés mûrir 3 semaines de plus, séchage sur claie.'},
+    {id:6, seedId:5, dateLabel:'14 mai 2026', sort:'2026-05-14', qte:180, methode:'Battage', status:'sechage', notes:'Montée à graines au printemps, récolte échelonnée.'},
+    {id:7, seedId:7, dateLabel:'06 juin 2026', sort:'2026-06-06', qte:220, methode:'Battage', status:'trier', notes:'Siliques sèches à écosser.'},
+  ];
+
+  fmt(n){ return n.toLocaleString('fr-FR'); }
+  hexA(h,a){ const n=parseInt(h.slice(1),16); return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+  inWin(m,a,b){ return a<=b ? (m>=a&&m<=b) : (m>=a||m<=b); }
+  enrich(s){
+    const m=this.MONTHS_FULL, c=this.FAMS[s.famille]||'#7A7363';
+    const germColor=s.germ>=85?'#4F7A3F':(s.germ>=70?'#B08A2E':'#BC6A43');
+    const germLabel=s.germ>=85?'Bon':(s.germ>=70?'Moyen':'Faible');
+    const germSoft=s.germ>=85?'#E3EBD6':(s.germ>=70?'#F1E7CF':'#F2E0D2');
+    const cy=this.CYCLE[s.cycle]; const g=this.GUIDES[s.id]; const dm=this.DIFF[g.diff];
+    const yearsStored=2026 - s.recolteAnnee;
+    const longLabel = s.longMin===s.longMax ? (s.longMax+' ans') : (s.longMin+'–'+s.longMax+' ans');
+    let vlabel, vcolor, vsoft, vsub;
+    if(yearsStored > s.longMax){ vlabel='Hors durée'; vcolor='#BC6A43'; vsoft='#F3E2D5'; vsub='Semence périmée'; }
+    else if(yearsStored >= s.longMin){ vlabel='Dernière saison'; vcolor='#B08A2E'; vsoft='#F1E7CF'; vsub='À semer en priorité'; }
+    else { const rem=s.longMax-yearsStored; vlabel='Encore viable'; vcolor='#4F7A3F'; vsoft='#E3EBD6'; vsub='≈ '+rem+' an(s) restants'; }
+    const consPct=Math.max(0, Math.min(100, Math.round((s.longMax-yearsStored)/s.longMax*100)));
+    return Object.assign({}, s, {
+      familyColor:c, famSoft:this.hexA(c,0.13),
+      initials:s.nom.slice(0,2).toUpperCase(),
+      germColor, germLabel, germSoft,
+      cycleLabel:cy.label, cycleColor:cy.color, cycleSoft:cy.soft,
+      yearsStored, longLabel, vlabel, vcolor, vsoft, vsub, consW:consPct+'%',
+      embr:this.EMBR,
+      semisLabel: s.sd===s.se? m[s.sd-1] : m[s.sd-1]+' – '+m[s.se-1],
+      qtyFmt:this.fmt(s.qty), low:s.qty<100,
+      cultivarQ:'« '+s.cultivar+' »',
+      diffLabel:g.diff, diffColor:dm.color, diffSoft:dm.soft, diffNote:g.note, guide:g,
+      open:()=>this.openSeed(s.id),
+    });
+  }
+  openSeed(id){ const f=this.state.screen==='detail'?'catalogue':this.state.screen; this.setState({selectedId:id, prevScreen:f, screen:'detail'}); }
+
+  componentDidMount(){
+    try{
+      const k=localStorage.getItem('grainor.openrouter.key')||'';
+      const m=localStorage.getItem('grainor.openrouter.model')||this.state.aiModel;
+      const p=JSON.parse(localStorage.getItem('grainor.photos')||'{}');
+      this.setState({apiKey:k, aiModel:m, photos:p});
+    }catch(e){}
+  }
+  saveKey(){ try{ localStorage.setItem('grainor.openrouter.key', this.state.apiKey.trim()); localStorage.setItem('grainor.openrouter.model', this.state.aiModel); }catch(e){} this.setState({keySaved:true}); setTimeout(()=>this.setState({keySaved:false}), 2000); }
+  parseAI(txt){ try{ return JSON.parse(txt); }catch(e){} const m=txt&&txt.match(/\{[\s\S]*\}/); if(m){ try{ return JSON.parse(m[0]); }catch(e){} } return null; }
+  runAI(){
+    const key=(this.state.apiKey||'').trim(); const name=(this.state.aiQuery||'').trim();
+    if(!name){ this.setState({aiError:"Saisissez d'abord un nom de variété."}); return; }
+    if(!key){ this.setState({aiError:'Ajoutez votre clé OpenRouter dans les Paramètres.'}); return; }
+    this.setState({aiLoading:true, aiError:'', aiData:null});
+    const sys='Tu es expert en semences potagères et en botanique. Pour la variété demandée, réponds UNIQUEMENT par un objet JSON valide (aucun texte ni balise autour), avec ces clés : nom, cultivar, latin, famille, classe, ordre, genre, espece, cycle ("Annuelle"|"Bisannuelle"|"Vivace"), dureeMin, dureeMax (entiers = années de faculté germinative), semis (ex "Mars – Avril"), recolteMois, profondeur, levee, espacement, type, difficulte ("Facile"|"Moyen"|"Difficile"), reproduction (1 phrase sur autogamie/allogamie et isolement), recolte (2-3 phrases), tri (2-3 phrases), germination (1-2 phrases). Tout en français.';
+    fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method:'POST',
+      headers:{ 'Authorization':'Bearer '+key, 'Content-Type':'application/json', 'X-Title':'Grainor' },
+      body:JSON.stringify({ model:this.state.aiModel, temperature:0.2, messages:[{role:'system',content:sys},{role:'user',content:name}] })
+    }).then(r=>r.json()).then(j=>{
+      if(j.error){ throw new Error(j.error.message||'Erreur de l\'API'); }
+      const txt=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
+      const data=this.parseAI(txt);
+      if(!data){ throw new Error('Réponse de l\'IA illisible, réessayez.'); }
+      this.setState({aiData:data, aiLoading:false});
+    }).catch(e=>{ this.setState({aiError:(e&&e.message)||'Échec de la requête.', aiLoading:false}); });
+  }
+  openImgSearch(seed){ this.setState({imgOpen:true, imgSeedId:seed.id, imgQuery:seed.latin, imgResults:[], imgError:''}); setTimeout(()=>this.runImgSearch(), 60); }
+  runImgSearch(){
+    const q=(this.state.imgQuery||'').trim(); if(!q){ return; }
+    this.setState({imgLoading:true, imgError:'', imgResults:[]});
+    const url='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch='+encodeURIComponent(q)+'&gsrlimit=18&prop=imageinfo&iiprop=url|mime&iiurlwidth=320&format=json&origin=*';
+    fetch(url).then(r=>r.json()).then(j=>{
+      const pages=(j.query&&j.query.pages)?Object.keys(j.query.pages).map(k=>j.query.pages[k]):[];
+      const res=pages.map(p=>{ const ii=p.imageinfo&&p.imageinfo[0]; if(!ii) return null; if(ii.mime&&!/^image\/(jpeg|png|gif|webp)/.test(ii.mime)) return null; return {thumb:ii.thumburl||ii.url, full:ii.url}; }).filter(Boolean);
+      this.setState({imgResults:res, imgLoading:false, imgError: res.length?'':'Aucune image trouvée pour cette recherche.'});
+    }).catch(e=>{ this.setState({imgError:'Recherche indisponible (connexion).', imgLoading:false}); });
+  }
+  setSeedPhoto(id,url){ const photos=Object.assign({}, this.state.photos, {[id]:url}); try{ localStorage.setItem('grainor.photos', JSON.stringify(photos)); }catch(e){} this.setState({photos}); }
+  pickImage(url){ this.setSeedPhoto(this.state.imgSeedId, url); this.setState({imgOpen:false}); }
+
+  renderVals(){
+    const hexA=(h,a)=>this.hexA(h,a);
+    const photos=this.state.photos||{};
+    const seeds=this.RAW.map(s=>this.enrich(s));
+    const byId=id=>seeds.find(s=>s.id===id);
+    const cur=6;
+    const totalSeeds=seeds.reduce((a,s)=>a+s.qty,0);
+    const avgGerm=Math.round(seeds.reduce((a,s)=>a+s.germ,0)/seeds.length);
+    const aSemerList=seeds.filter(s=>s.sd<=cur&&cur<=s.se);
+
+    const alertList=[];
+    seeds.filter(s=>s.yearsStored>s.longMax).forEach(s=>alertList.push({
+      id:'e'+s.id, title:s.nom+' '+s.cultivarQ,
+      detail:'Hors durée · récolte '+s.recolte+' · '+s.longLabel,
+      tag:'À écarter', color:'#BC6A43', soft:'#F3E2D5', open:s.open }));
+    seeds.filter(s=>s.yearsStored<=s.longMax && s.yearsStored>=s.longMin).forEach(s=>alertList.push({
+      id:'d'+s.id, title:s.nom+' '+s.cultivarQ,
+      detail:'Dernière saison · récolte '+s.recolte+' · '+s.longLabel,
+      tag:'Priorité', color:'#B08A2E', soft:'#F1E7CF', open:s.open }));
+    seeds.filter(s=>s.low).forEach(s=>alertList.push({
+      id:'l'+s.id, title:s.nom+' '+s.cultivarQ,
+      detail:'Stock faible · '+s.qtyFmt+' graines',
+      tag:'À multiplier', color:'#9A7B3E', soft:'#F2E8CE', open:s.open }));
+
+    const counts={}; seeds.forEach(s=>counts[s.famille]=(counts[s.famille]||0)+1);
+    const families=[{key:'all',label:'Toutes',color:'#33503B',count:seeds.length}]
+      .concat(Object.keys(this.FAMS).filter(f=>counts[f]).map(f=>({key:f,label:f,color:this.FAMS[f],count:counts[f]})));
+    families.forEach(c=>{ const a=this.state.filter===c.key; c.active=a;
+      c.chipBg=a?'#33503B':'#FCFAF5'; c.chipColor=a?'#FBF7EE':'#4A4536'; c.chipBorder=a?'#33503B':'rgba(80,60,30,0.14)';
+      c.dotShow=c.key!=='all'; c.pick=()=>this.setState({filter:c.key}); });
+
+    const q=this.state.search.trim().toLowerCase();
+    let filtered=seeds;
+    if(this.state.filter!=='all') filtered=filtered.filter(s=>s.famille===this.state.filter);
+    if(q) filtered=filtered.filter(s=>(s.nom+' '+s.cultivar+' '+s.latin+' '+s.famille).toLowerCase().includes(q));
+
+    const order=['A','B','C','D','E'];
+    const zones=order.map(z=>{ const meta=this.ZONE_META[z]; const items=seeds.filter(s=>s.zone===z);
+      const total=items.reduce((a,s)=>a+s.qty,0); const fill=Math.min(100,Math.round(total/meta.cap*100));
+      return {key:z, name:meta.name, cond:meta.cond, color:meta.color, colorSoft:hexA(meta.color,0.16),
+        items, nbVar:items.length, totalFmt:this.fmt(total), fill, barW:fill+'%',
+        barColor: fill>85?'#BC6A43':'#6E8466'}; });
+
+    const cellsFn=(s,mk)=>this.MONTHS.map((lab,i)=>{ const idx=i+1; const on=idx>=s.sd&&idx<=s.se;
+      return {idx, bg:on?s.familyColor:'#E7DECB', sh:idx===mk?'inset 0 0 0 2px #33503B':'inset 0 0 0 0 transparent'}; });
+
+    const sel0=byId(this.state.selectedId)||seeds[0];
+    const deg=Math.round(sel0.germ*3.6);
+    const history=this.HARVESTS.filter(h=>h.seedId===sel0.id).sort((a,b)=>a.sort<b.sort?1:-1).map(h=>{ const st=this.STATUS[h.status];
+      return {dateLabel:h.dateLabel, methode:h.methode, qteFmt:this.fmt(h.qte), statusLabel:st.label, statusColor:st.color, statusSoft:st.soft}; });
+    const gt=this.state.guideTab;
+    const gsteps=(sel0.guide[gt]||[]).map((st,i)=>({n:i+1, t:st.t, d:st.d}));
+    const segG=k=>gt===k?{bg:'#33503B',color:'#FBF7EE'}:{bg:'transparent',color:'#5E5848'};
+    const sel=Object.assign({}, sel0, {
+      gaugeBg:'conic-gradient('+sel0.germColor+' '+deg+'deg, #E7DECB '+deg+'deg)',
+      heroStripe:'repeating-linear-gradient(135deg, '+hexA(sel0.familyColor,0.22)+' 0 12px, '+hexA(sel0.familyColor,0.08)+' 12px 24px)',
+      cells:cellsFn(sel0,cur), history, hasHistory:history.length>0, noHistory:history.length===0,
+      guideSteps:gsteps,
+      gtRecolteBg:segG('recolte').bg, gtRecolteColor:segG('recolte').color,
+      gtTriBg:segG('tri').bg, gtTriColor:segG('tri').color,
+      gtGermBg:segG('germination').bg, gtGermColor:segG('germination').color,
+      setGuideRecolte:()=>this.setState({guideTab:'recolte'}),
+      setGuideTri:()=>this.setState({guideTab:'tri'}),
+      setGuideGerm:()=>this.setState({guideTab:'germination'}),
+      hasPhoto:!!photos[sel0.id], noPhoto:!photos[sel0.id],
+      photoEl: photos[sel0.id] ? React.createElement('img',{src:photos[sel0.id], alt:sel0.nom, style:{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}}) : null,
+      openImg:()=>this.openImgSearch(sel0),
+    });
+
+    const selM=this.state.selectedMonth;
+    const monthChips=this.MONTHS.map((lab,i)=>{ const idx=i+1; const active=idx===selM; const has=seeds.some(s=>s.sd<=idx&&idx<=s.se);
+      return {idx,label:lab,active,bg:active?'#33503B':'#FCFAF5',color:active?'#FBF7EE':(has?'#4A4536':'#A89E89'),border:active?'#33503B':'rgba(80,60,30,0.12)',
+        dotColor:active?'#FBF7EE':'#9CB07F', pick:()=>this.setState({selectedMonth:idx})}; });
+    const calendarSeeds=seeds.filter(s=>s.sd<=selM&&selM<=s.se).map(s=>Object.assign({},s,{cells:cellsFn(s,selM)}));
+
+    const agendaSeeds=seeds.map(s=>({ nom:s.nom, cultivar:s.cultivar, familyColor:s.familyColor, cycleColor:s.cycleColor, open:s.open,
+      cells:this.MONTHS.map((lab,i)=>{ const idx=i+1; const semisOn=idx>=s.sd&&idx<=s.se; const recOn=this.inWin(idx,s.rd,s.re);
+        return { semisBg:semisOn?s.familyColor:'#EBE3D3', recolteBg:recOn?'#9A7B4E':'#EBE3D3', wrapBg:idx===cur?'rgba(51,80,59,0.08)':'transparent' }; }) }));
+
+    const recoltesAll=this.HARVESTS.slice().sort((a,b)=>a.sort<b.sort?1:-1).map(h=>{ const s=byId(h.seedId); const st=this.STATUS[h.status];
+      return {id:h.id, status:h.status, nom:s.nom, cultivar:s.cultivar, familyColor:s.familyColor, dateLabel:h.dateLabel, methode:h.methode, qteFmt:this.fmt(h.qte), notes:h.notes, statusLabel:st.label, statusColor:st.color, statusSoft:st.soft, open:s.open}; });
+    const recCount=k=>this.HARVESTS.filter(h=>h.status===k).length;
+    const recolteChips=[{key:'all',label:'Tous',count:recoltesAll.length},{key:'stocke',label:'Stocké',count:recCount('stocke')},{key:'sechage',label:'Séchage',count:recCount('sechage')},{key:'trier',label:'À trier',count:recCount('trier')}];
+    recolteChips.forEach(c=>{ const a=this.state.recolteFilter===c.key;
+      c.chipBg=a?'#33503B':'#FCFAF5'; c.chipColor=a?'#FBF7EE':'#4A4536'; c.chipBorder=a?'#33503B':'rgba(80,60,30,0.14)';
+      c.pick=()=>this.setState({recolteFilter:c.key}); });
+    const filteredRecoltes=this.state.recolteFilter==='all'?recoltesAll:recoltesAll.filter(r=>r.status===this.state.recolteFilter);
+    const totalRecGr=this.HARVESTS.reduce((a,h)=>a+h.qte,0);
+    const seedChips=seeds.map(s=>({nom:s.nom, cultivar:s.cultivar, familyColor:s.familyColor}));
+
+    const ad=this.state.aiData;
+    let aiView=null;
+    if(ad){
+      const fc=this.FAMS[ad.famille]||'#7A7363';
+      const cyc=this.CYCLE[(ad.cycle||'').toLowerCase()]||{label:ad.cycle||'—',color:'#6E8466',soft:'#E6EBD7'};
+      const dm=this.DIFF[ad.difficulte]||{color:'#B08A2E',soft:'#F1E7CF'};
+      aiView={ nom:ad.nom||this.state.aiQuery, latin:ad.latin||'', famille:ad.famille||'—', famColor:fc, famSoft:hexA(fc,0.13),
+        cycleLabel:cyc.label, cycleColor:cyc.color, cycleSoft:cyc.soft, difficulte:ad.difficulte||'Moyen', diffColor:dm.color, diffSoft:dm.soft,
+        duree:(ad.dureeMin&&ad.dureeMax)?(ad.dureeMin+'–'+ad.dureeMax+' ans'):'—', semis:ad.semis||'—', espece:ad.espece||(ad.genre?ad.genre:'—'),
+        reproduction:ad.reproduction||'' };
+    }
+    const imgResults=(this.state.imgResults||[]).map(r=>({
+      el:React.createElement('img',{src:r.thumb, loading:'lazy', style:{width:'100%',height:'100%',objectFit:'cover',display:'block'}}),
+      pick:()=>this.pickImage(r.full)
+    }));
+
+    const sc=this.state.screen, A='#33503B', I='#A89E89';
+    const cv=this.state.calView;
+    const go=s=>()=>this.setState({screen:s, imgOpen:false});
+    const hasKey=!!(this.state.apiKey||'').trim();
+
+    return {
+      isAccueil:sc==='accueil', isCatalogue:sc==='catalogue', isDetail:sc==='detail', isInventaire:sc==='inventaire', isCalendrier:sc==='calendrier', isAjout:sc==='ajout', isRecoltes:sc==='recoltes', isRecolteAdd:sc==='recolteAdd', isParametres:sc==='parametres',
+      varCount:seeds.length, totalSeedsFmt:this.fmt(totalSeeds), aSemerCount:aSemerList.length, avgGerm,
+      aSemerList, alertList, families, filtered, filteredCount:filtered.length, filteredEmpty:filtered.length===0,
+      zones, sel, monthChips, calendarSeeds, calCount:calendarSeeds.length, selectedMonthLabel:this.MONTHS_FULL[selM-1],
+      agendaSeeds,
+      recoltesAll, recolteChips, filteredRecoltes, recoltesRecent:recoltesAll.slice(0,3),
+      recoltesCount:recoltesAll.length, recoltesGrFmt:this.fmt(totalRecGr), sechageCount:recCount('sechage'), trierCount:recCount('trier'),
+      seedChips,
+      isCalMois:cv==='mois', isCalAnnee:cv==='annee',
+      segMoisBg:cv==='mois'?'#33503B':'transparent', segMoisColor:cv==='mois'?'#FBF7EE':'#5E5848',
+      segAnneeBg:cv==='annee'?'#33503B':'transparent', segAnneeColor:cv==='annee'?'#FBF7EE':'#5E5848',
+      navAccueilCol:sc==='accueil'?A:I, navCatalogueCol:(sc==='catalogue'||sc==='detail')?A:I, navRecoltesCol:(sc==='recoltes'||sc==='recolteAdd')?A:I, navInventaireCol:sc==='inventaire'?A:I, navCalendrierCol:sc==='calendrier'?A:I,
+      showFab: !(sc==='detail'||sc==='ajout'||sc==='recolteAdd'||sc==='parametres'),
+      goAccueil:go('accueil'), goCatalogue:go('catalogue'), goInventaire:go('inventaire'), goCalendrier:go('calendrier'), goAjout:go('ajout'), goRecoltes:go('recoltes'), goRecolteAdd:go('recolteAdd'), goParametres:go('parametres'),
+      apiKey:this.state.apiKey, aiModel:this.state.aiModel, hasKey, noKey:!hasKey, keySaved:this.state.keySaved,
+      aiQuery:this.state.aiQuery, aiLoading:this.state.aiLoading, aiError:this.state.aiError, aiErrorShow:!!this.state.aiError, hasAiData:!!ad, aiView,
+      modelOptions:[
+        {value:'meta-llama/llama-3.3-70b-instruct:free', label:'Llama 3.3 70B · gratuit'},
+        {value:'google/gemini-2.0-flash-exp:free', label:'Gemini 2.0 Flash · gratuit'},
+        {value:'deepseek/deepseek-r1:free', label:'DeepSeek R1 · gratuit'},
+        {value:'qwen/qwen-2.5-72b-instruct:free', label:'Qwen 2.5 72B · gratuit'},
+      ],
+      onApiKey:e=>this.setState({apiKey:e.target.value}),
+      onModel:e=>this.setState({aiModel:e.target.value}),
+      saveKeyh:()=>this.saveKey(),
+      onAiQuery:e=>this.setState({aiQuery:e.target.value}),
+      runAIh:()=>this.runAI(),
+      imgOpen:this.state.imgOpen, imgQuery:this.state.imgQuery, imgLoading:this.state.imgLoading, imgError:this.state.imgError, imgErrorShow:!!this.state.imgError, imgResults,
+      imgGoogleUrl:'https://www.google.com/search?tbm=isch&q='+encodeURIComponent((this.state.imgQuery||'').trim()),
+      onImgQuery:e=>this.setState({imgQuery:e.target.value}),
+      runImgh:()=>this.runImgSearch(),
+      closeImg:()=>this.setState({imgOpen:false}),
+      calMois:()=>this.setState({calView:'mois'}), calAnnee:()=>this.setState({calView:'annee'}),
+      doBack:()=>this.setState({screen:this.state.prevScreen||'catalogue'}),
+      onSearch:e=>this.setState({search:e.target.value}),
+      search:this.state.search,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<div align="center">
+
+<img src="web/icons/icon-512.png" alt="Logo Grainor" width="120" />
+
+# 🌱 Grainor
+
+**Gestion des semences pour maraîcher·ère semi‑professionnel·le**
+
+*Classifier · Entreposer · Planifier · Récupérer ses graines*
+
+![Statut](https://img.shields.io/badge/statut-en%20développement-B08A2E?style=flat-square)
+![Plateforme](https://img.shields.io/badge/Expo-React%20Native-33503B?style=flat-square&logo=expo&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Hors‑ligne](https://img.shields.io/badge/offline--first-✔-4F7A3F?style=flat-square)
+![Licence](https://img.shields.io/badge/licence-MIT-9A7B3E?style=flat-square)
+
+</div>
+
+---
+
+## 🌾 Pourquoi Grainor ?
+
+Grainor s'adresse à un **maraîcher semi‑professionnel** qui produit et conserve ses propres
+semences. L'app est pensée pour être **dense et efficace** (pas un gadget grand public) :
+repérage rapide au champ comme à l'atelier, données fiables, et un vrai savoir‑faire sur la
+**récupération des graines** espèce par espèce.
+
+L'app fonctionne **hors‑ligne par défaut** : toutes les données vivent sur l'appareil.
+
+### Les 4 piliers
+
+| | Pilier | Ce que ça couvre |
+|---|---|---|
+| 🗂️ | **Classifier** | Catalogue des variétés + classification botanique complète |
+| 📦 | **Entreposer** | Inventaire par zone de stockage, quantités, conditions |
+| 🗓️ | **Planifier** | Calendrier de semis (par mois + agenda annuel semis/récolte) |
+| 🌱 | **Récupérer** | Journal de récolte de graines + guides « comment procéder » + suivi de viabilité |
+
+---
+
+## 📱 Écrans
+
+| # | Écran | État |
+|---|-------|------|
+| 🏠 | **Accueil** — tableau de bord, à semer, à surveiller | ⏳ à venir |
+| 📖 | **Catalogue** — recherche + filtres par famille botanique | ✅ implémenté |
+| 🔎 | **Fiche détail** — viabilité, classification, guide de récupération | ✅ implémenté |
+| 🌾 | **Récoltes** — journal de récupération des semences | ⏳ à venir |
+| ✍️ | **Noter une récolte** — variété, méthode, statut, notes | ⏳ à venir |
+| 📦 | **Inventaire** — zones d'entreposage et remplissage | ⏳ à venir |
+| 🗓️ | **Calendrier** — par mois + agenda annuel | ⏳ à venir |
+| ➕ | **Ajouter une graine** — assistant IA + saisie manuelle | ⏳ à venir |
+| ⚙️ | **Paramètres** — clé OpenRouter (stockage local sécurisé) | ⏳ à venir |
+
+> Navigation : 5 onglets en bas (Accueil · Catalogue · Récoltes · Inventaire · Calendrier),
+> un bouton **＋** flottant pour ajouter une variété, et les Paramètres accessibles depuis l'entête.
+
+### Aperçu de la maquette cible
+
+<div align="center">
+<img src="design_handoff_grainor/screenshots/03-catalogue.png" width="220" />
+<img src="design_handoff_grainor/screenshots/04-fiche-haut.png" width="220" />
+<img src="design_handoff_grainor/screenshots/07-fiche-guide.png" width="220" />
+</div>
+
+---
+
+## 🎨 Identité visuelle
+
+Une esthétique **papier / herbier** : fond crème, vert forêt, titres en serif.
+
+| Rôle | Couleur | |
+|------|---------|---|
+| Fond | `#EFE7D6` | 🟫 |
+| Surface (cartes) | `#FCFAF5` | ⬜ |
+| Primaire (vert forêt) | `#33503B` | 🟩 |
+| Texte | `#2B271F` | ⬛ |
+
+- **Typographies** — [Newsreader](https://fonts.google.com/specimen/Newsreader) (serif, pour les noms de variétés, titres et chiffres) + [Hanken Grotesk](https://fonts.google.com/specimen/Hanken+Grotesk) (sans, pour l'UI).
+- **Repérage** — code couleur par **famille botanique** et par **cycle de vie**.
+- **Icônes** — outline (trait 1.7–1.9), **aucun emoji dans l'app**.
+- **Cartes** — bordure fine, **pas d'ombre portée** ; rayons 12–18 px ; cibles tactiles ≥ 44 px.
+
+Tous les tokens sont centralisés dans [`GrainorApp/src/theme/tokens.ts`](GrainorApp/src/theme/tokens.ts).
+
+---
+
+## 🧠 Logique métier
+
+- **Viabilité** calculée par durée de faculté germinative → libellés *Encore viable* / *Dernière saison* / *Hors durée*.
+- **Germination mesurée** → bandes de couleur Bon / Moyen / Faible.
+- **Fenêtre de semis** pouvant **traverser l'année** (ex. novembre → février).
+- **Remplissage de zone** en % (alerte au‑delà de 85 %).
+- **Guides de récupération** espèce par espèce (récolte / tri / germination).
+
+Détails dans [`CONTEXT.md`](CONTEXT.md) et [`GrainorApp/src/logic/seeds.ts`](GrainorApp/src/logic/seeds.ts).
+
+---
+
+## 🔌 Intégrations externes
+
+- 🖼️ **Recherche d'image** — Wikimedia Commons (API publique, sans clé) + lien Google Images.
+- 🤖 **Assistant IA** — [OpenRouter](https://openrouter.ai/) (modèles `:free`). La proposition de l'IA est **validée par l'utilisateur** avant d'être enregistrée.
+
+> 🔐 **Sécurité — important.** La clé API OpenRouter est saisie dans les Paramètres et stockée
+> dans le **stockage local sécurisé** de l'appareil (`expo-secure-store`). Elle n'est **jamais**
+> écrite en dur dans le code, ni committée. **Ne committez jamais votre clé OpenRouter.**
+
+---
+
+## 🛠️ Stack technique
+
+- **React Native + Expo** (SDK 56) · **TypeScript** (strict)
+- **React Navigation** — onglets bas + pile native, barre d'onglets personnalisée
+- **react-native-svg** — icônes outline, jauge de germination (anneau), motifs
+- **expo-secure-store** (clé API) · **AsyncStorage** (photos & données)
+- **@expo-google-fonts** — Newsreader + Hanken Grotesk
+
+---
+
+## 🚀 Démarrer
+
+```bash
+cd GrainorApp
+npm install
+npx expo start          # puis ouvrir dans Expo Go ou un émulateur
+```
+
+Vérifications :
+
+```bash
+npx tsc --noEmit                          # typage
+npx expo export --platform android        # build du bundle
+```
+
+---
+
+## 📲 PWA & déploiement Netlify
+
+Le dossier [`web/`](web/) contient tout le nécessaire pour installer Grainor en
+**application web (PWA)** sur le téléphone :
+
+```
+web/
+├── manifest.webmanifest     # nom, couleurs, icônes (purpose any + maskable)
+├── head-snippet.html        # balises <head> à injecter (manifest, favicons, apple-touch)
+└── icons/
+    ├── icon.svg / icon-maskable.svg   # sources vectorielles (régénérables)
+    ├── icon-192.png / icon-512.png
+    ├── icon-maskable-192.png / icon-maskable-512.png
+    ├── apple-touch-icon.png (180×180)
+    ├── favicon.ico + favicon-16/32.png
+```
+
+**Étapes Netlify (Expo Web) :**
+
+1. Générer le site statique :
+   ```bash
+   cd GrainorApp && npx expo export --platform web   # sortie dans dist/
+   ```
+2. Copier `web/manifest.webmanifest` et `web/icons/` à la racine publiée, puis insérer le
+   contenu de `web/head-snippet.html` dans le `<head>` de la page.
+3. Déployer le dossier `dist/` sur Netlify (drag‑and‑drop ou `netlify deploy --prod --dir dist`).
+4. Sur le téléphone : ouvrir le site → *Ajouter à l'écran d'accueil*. L'icône 🌱 Grainor apparaît.
+
+---
+
+## 🗂️ Structure du dépôt
+
+```
+Grainor/
+├── GrainorApp/             # application Expo / React Native
+│   ├── App.tsx             # polices + providers + navigation
+│   └── src/
+│       ├── theme/          # tokens de design (source unique)
+│       ├── data/           # jeu de données de démo (variétés, récoltes, guides)
+│       ├── logic/          # logique métier (viabilité, germination, zones…)
+│       ├── store/          # état global (offline-first, SecureStore)
+│       ├── components/     # Icon, primitives UI, jauge, recherche d'image
+│       ├── screens/        # écrans (Catalogue, Fiche détail, …)
+│       └── navigation/     # onglets + pile + FAB
+├── web/                    # PWA : manifest + icônes + snippet <head>
+├── design_handoff_grainor/ # spec fonctionnelle + design + captures de référence
+├── CONTEXT.md              # contexte d'architecture & de design (pour contributeurs/agents)
+└── CHANGELOG.md            # journal des versions
+```
+
+---
+
+## 📄 Licence
+
+[MIT](GrainorApp/LICENSE) — © 2026
