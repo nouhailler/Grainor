@@ -4,7 +4,8 @@
 [build]
   base = "GrainorApp"
   command = "npm ci && npm run build:web"
-  publish = "GrainorApp/dist"
+  # publish est résolu RELATIVEMENT à `base` → "dist" = GrainorApp/dist
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
