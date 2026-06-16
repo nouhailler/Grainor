@@ -8,6 +8,13 @@ et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 ## [Non publié]
 
 ### Ajouté
+- **Modèles gratuits dynamiques (Paramètres)** — une fois la clé OpenRouter enregistrée (et
+  validée par l'appel), la **liste live de tous les modèles gratuits** est récupérée
+  (`GET /api/v1/models`, filtrés sur `:free` / tarif nul), filtrable, et le choix est **persisté**
+  pour la suite (`fetchFreeModels` dans `logic/ai.ts`).
+- **Création assistée par IA depuis le Catalogue** — quand une recherche ne correspond à aucune
+  variété locale, un bouton « Créer cette variété avec l'IA » ouvre l'écran d'ajout pré‑rempli et
+  lance automatiquement le remplissage IA (proposition toujours validée par l'utilisateur).
 - **Cible web (PWA)** — l'app tourne sous `react-native-web`. Script `scripts/web-pwa.mjs` +
   commande `npm run build:web` : export Expo web post‑traité (titre/langue, manifest,
   `theme-color`, apple‑touch‑icon, copie des icônes, fallback SPA `_redirects`).

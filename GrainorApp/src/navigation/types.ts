@@ -2,7 +2,7 @@
 export type RootStackParamList = {
   Tabs: undefined;
   Detail: { seedId: number };
-  Ajout: undefined;
+  Ajout: { query?: string } | undefined;
   NoterRecolte: { seedId?: number } | undefined;
   Parametres: undefined;
 };

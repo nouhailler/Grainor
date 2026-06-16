@@ -9,13 +9,40 @@ export interface AIModel {
   label: string;
 }
 
-/** Modèles gratuits (`:free`) proposés dans les Paramètres. */
+/** Modèles gratuits proposés par défaut (repli hors-ligne / avant chargement de la liste live). */
 export const AI_MODELS: AIModel[] = [
   { value: 'meta-llama/llama-3.3-70b-instruct:free', label: 'Llama 3.3 70B · gratuit' },
   { value: 'google/gemini-2.0-flash-exp:free', label: 'Gemini 2.0 Flash · gratuit' },
   { value: 'deepseek/deepseek-r1:free', label: 'DeepSeek R1 · gratuit' },
   { value: 'qwen/qwen-2.5-72b-instruct:free', label: 'Qwen 2.5 72B · gratuit' },
 ];
+
+/** Un modèle est « gratuit » si son id se termine par :free ou si son tarif est nul. */
+function isFree(m: any): boolean {
+  if (typeof m?.id === 'string' && m.id.endsWith(':free')) return true;
+  const p = m?.pricing;
+  if (!p) return false;
+  const zero = (v: any) => v === 0 || v === '0' || parseFloat(v) === 0;
+  return zero(p.prompt) && zero(p.completion);
+}
+
+/**
+ * Récupère la liste LIVE de tous les modèles gratuits d'OpenRouter.
+ * L'appel valide aussi la clé (401 → clé invalide).
+ */
+export async function fetchFreeModels(key: string): Promise<AIModel[]> {
+  const res = await fetch('https://openrouter.ai/api/v1/models', {
+    headers: key ? { Authorization: 'Bearer ' + key } : undefined,
+  });
+  const j = await res.json();
+  if (j.error) throw new Error(j.error.message || 'Clé invalide ou API indisponible.');
+  const list: any[] = Array.isArray(j.data) ? j.data : [];
+  const models = list
+    .filter(isFree)
+    .map((m) => ({ value: m.id as string, label: (m.name as string) || (m.id as string) }))
+    .sort((a, b) => a.label.localeCompare(b.label, 'fr'));
+  return models;
+}
 
 /** Proposition renvoyée par l'IA (tous les champs sont optionnels et révisables). */
 export interface AIProposal {

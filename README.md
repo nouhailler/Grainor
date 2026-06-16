@@ -132,7 +132,10 @@ Détails dans [`CONTEXT.md`](CONTEXT.md) et [`GrainorApp/src/logic/seeds.ts`](Gr
 ## 🔌 Intégrations externes
 
 - 🖼️ **Recherche d'image** — Wikimedia Commons (API publique, sans clé) + lien Google Images.
-- 🤖 **Assistant IA** — [OpenRouter](https://openrouter.ai/) (modèles `:free`). La proposition de l'IA est **validée par l'utilisateur** avant d'être enregistrée.
+- 🤖 **Assistant IA** — [OpenRouter](https://openrouter.ai/). Une fois la clé enregistrée, l'app
+  récupère la **liste live de tous les modèles gratuits** (sélection persistée). Depuis le
+  **Catalogue**, une recherche sans résultat propose de **créer la variété avec l'IA**. La
+  proposition de l'IA est toujours **validée par l'utilisateur** avant d'être enregistrée.
 
 > 🔐 **Sécurité — important.** La clé API OpenRouter est saisie dans les Paramètres et stockée
 > dans le **stockage local sécurisé** de l'appareil (`expo-secure-store`). Elle n'est **jamais**

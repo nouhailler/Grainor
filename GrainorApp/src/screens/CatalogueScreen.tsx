@@ -117,7 +117,24 @@ export function CatalogueScreen() {
           {filtered.length === 0 && (
             <View style={styles.empty}>
               <Text style={styles.emptyTitle}>Aucune variété</Text>
-              <Text style={styles.emptySub}>Essayez un autre filtre ou terme de recherche.</Text>
+              {search.trim() ? (
+                <>
+                  <Text style={styles.emptySub}>
+                    « {search.trim()} » n'est pas encore dans votre catalogue.
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.aiCreate}
+                    activeOpacity={0.85}
+                    onPress={() => nav.navigate('Ajout', { query: search.trim() })}
+                  >
+                    <Icon name="sparkle" size={17} color={colors.onPrimary} />
+                    <Text style={styles.aiCreateText}>Créer cette variété avec l'IA</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.emptyHint}>L'assistant remplit la fiche ; vous validez avant d'enregistrer.</Text>
+                </>
+              ) : (
+                <Text style={styles.emptySub}>Essayez un autre filtre ou terme de recherche.</Text>
+              )}
             </View>
           )}
         </View>
@@ -208,5 +225,17 @@ const styles = StyleSheet.create({
   vlabel: { fontFamily: fonts.sansSemi, fontSize: 9.5 },
   empty: { alignItems: 'center', paddingVertical: 40, paddingHorizontal: 20 },
   emptyTitle: { fontFamily: fonts.serif, fontSize: 18, color: colors.textMuted },
-  emptySub: { fontFamily: fonts.sans, fontSize: 13, color: colors.textFaint, marginTop: 6 },
+  emptySub: { fontFamily: fonts.sans, fontSize: 13, color: colors.textFaint, marginTop: 6, textAlign: 'center' },
+  aiCreate: {
+    marginTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.primary,
+    borderRadius: 13,
+    paddingVertical: 13,
+    paddingHorizontal: 20,
+  },
+  aiCreateText: { fontFamily: fonts.sansSemi, fontSize: 14, color: colors.onPrimary },
+  emptyHint: { fontFamily: fonts.sans, fontSize: 11.5, color: colors.textFaint, marginTop: 10, textAlign: 'center' },
 });

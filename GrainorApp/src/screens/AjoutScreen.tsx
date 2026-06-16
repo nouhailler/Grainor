@@ -2,8 +2,8 @@
  * 4.7 Ajouter une graine — assistant IA (OpenRouter) + scan + saisie manuelle.
  * La proposition de l'IA est une AIDE : elle pré-remplit le formulaire, l'utilisateur valide.
  */
-import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -18,6 +18,7 @@ import { Icon } from '../components/Icon';
 import { Dot, SectionLabel, TopBar } from '../components/ui';
 import { RawSeed } from '../data/seeds';
 import { AIProposal, askOpenRouter } from '../logic/ai';
+import type { RootStackParamList } from '../navigation/types';
 import { useApp } from '../store/AppContext';
 import { colors, CYCLE, CycleKey, FAMS, fonts, spacing } from '../theme/tokens';
 
@@ -44,9 +45,11 @@ const EMPTY: Form = {
 
 export function AjoutScreen() {
   const nav = useNavigation<any>();
+  const route = useRoute<RouteProp<RootStackParamList, 'Ajout'>>();
+  const initialQuery = route.params?.query ?? '';
   const { apiKey, aiModel, seeds, addSeed } = useApp();
 
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(initialQuery);
   const [loading, setLoading] = useState(false);
   const [aiError, setAiError] = useState('');
   const [proposal, setProposal] = useState<AIProposal | null>(null);
@@ -54,12 +57,12 @@ export function AjoutScreen() {
 
   const set = (k: keyof Form, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
-  const runAI = async () => {
+  const runAI = async (nameArg?: string) => {
     if (!apiKey) {
       setAiError('Ajoutez votre clé OpenRouter dans les Paramètres.');
       return;
     }
-    const name = query.trim();
+    const name = (nameArg ?? query).trim();
     if (!name) return;
     setLoading(true);
     setAiError('');
@@ -73,6 +76,17 @@ export function AjoutScreen() {
       setLoading(false);
     }
   };
+
+  // Arrivée depuis le Catalogue (« créer avec l'IA ») : lance le remplissage automatiquement.
+  const autoRan = useRef(false);
+  useEffect(() => {
+    if (autoRan.current) return;
+    if (initialQuery && apiKey) {
+      autoRan.current = true;
+      runAI(initialQuery);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuery, apiKey]);
 
   const applyProposal = () => {
     if (!proposal) return;
@@ -155,11 +169,11 @@ export function AjoutScreen() {
               placeholder="ex. Tomate Cœur de Bœuf"
               placeholderTextColor={colors.onPrimaryFaint}
               style={styles.aiInput}
-              onSubmitEditing={runAI}
+              onSubmitEditing={() => runAI()}
             />
           </View>
           {apiKey ? (
-            <TouchableOpacity style={styles.aiBtn} activeOpacity={0.85} onPress={runAI} disabled={loading}>
+            <TouchableOpacity style={styles.aiBtn} activeOpacity={0.85} onPress={() => runAI()} disabled={loading}>
               {loading ? (
                 <ActivityIndicator color={colors.primary} />
               ) : (
