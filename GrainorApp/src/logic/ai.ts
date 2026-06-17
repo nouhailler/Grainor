@@ -84,7 +84,8 @@ export interface AIProposal {
 }
 
 const SYSTEM_PROMPT =
-  "Tu es expert en semences potagères et en botanique. Pour la variété demandée, réponds " +
+  "Tu es expert en PRODUCTION ET CONSERVATION DE SEMENCES potagères (grainothèque) et en " +
+  "botanique. Pour la variété demandée, réponds " +
   "UNIQUEMENT par un objet JSON valide (aucun texte ni balise autour), TOUT en français, avec " +
   "EXACTEMENT ces clés, toutes renseignées avec des valeurs réalistes (ne laisse AUCUN champ " +
   "vide) :\n" +
@@ -99,10 +100,19 @@ const SYSTEM_PROMPT =
   '"dureeMin","dureeMax" (entiers = années de faculté germinative), ' +
   '"germination" (entier 0-100 = taux de germination typique), ' +
   '"origine" (ex. "Variété ancienne"), ' +
-  '"difficulte" ("Facile"|"Moyen"|"Difficile"), ' +
-  '"reproduction" (1 phrase : autogamie/allogamie + isolement), ' +
-  '"guideRecolte","guideTri","guideGermination" : chacun un tableau de 2 à 4 étapes, ' +
-  'chaque étape = objet {"titre","detail"} (titre court ; detail = 1-2 phrases concrètes).';
+  '"difficulte" ("Facile"|"Moyen"|"Difficile" — difficulté à PRODUIRE SOI-MÊME SES SEMENCES), ' +
+  '"reproduction" (1 phrase : autogamie/allogamie + distance/isolement nécessaire pour des graines pures), ' +
+  'IMPORTANT — Grainor est une GRAINOTHÈQUE : les trois guides ci-dessous concernent EXCLUSIVEMENT ' +
+  'la SEMENCE (la graine) de la variété — comment la produire, la récupérer et la conserver — et ' +
+  'JAMAIS la culture ni la récolte du légume destiné à la consommation. ' +
+  '"guideRecolte" = RÉCOLTER LES GRAINES sur des porte-graines (laisser monter en graines / monter à fleur, ' +
+  'repères de maturité des semences, moment et façon de récolter les graines, à maturité sèche le plus souvent) ; ' +
+  '"guideTri" = EXTRAIRE, NETTOYER et TRIER LES GRAINES (égrenage/battage ou fermentation pour les graines ' +
+  'à pulpe type tomate/courge, vannage, élimination de la balle et des graines vides, séchage avant stockage) ; ' +
+  '"guideGermination" = CONSERVER et TESTER LA GERMINATION DES GRAINES récupérées (test de germination sur ' +
+  'buvard, conditions de levée, durée de viabilité des semences) ; ' +
+  'chacun un tableau de 2 à 4 étapes, chaque étape = objet {"titre","detail"} ' +
+  '(titre court ; detail = 1-2 phrases concrètes, TOUJOURS centrées sur la graine).';
 
 /** Convertit des étapes IA en étapes de guide internes {t,d}. */
 export function aiStepsToGuide(arr?: AIStep[]): { t: string; d: string }[] {
