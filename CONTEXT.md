@@ -59,13 +59,15 @@ GrainorApp/src/
 
 - **État global** via React Context (`AppProvider` / `useApp`). Recalcul des variétés enrichies
   en `useMemo` à partir des données brutes. Méthodes : `addSeed`, `updateSeed`, `addHarvest`,
-  `setPhoto`, `saveApiKey`, `exportData`, `importData`.
+  `setPhoto`, `saveApiKey`, `exportData`, `importData`, `resetCatalogue`.
 - **Persistance** (`AsyncStorage`) : variétés `grainor.seeds`, récoltes `grainor.harvests`,
   photos `grainor.photos` ; clé + modèle IA dans `expo-secure-store`
   (`grainor.openrouter.key/model`). Les ajouts/édition/import et récoltes survivent au redémarrage.
 - **Import / export JSON** : `exportData()` (sauvegarde variétés + récoltes + photos),
-  `importData()` (restauration complète **ou** ajout de variétés ; `normalizeSeed` complète les
-  champs manquants). UI dans Paramètres.
+  `importData(raw, { replace })` — restauration complète **ou** ajout de variétés **ou
+  remplacement** du catalogue (case « Remplacer le catalogue existant ») ; `normalizeSeed`
+  complète les champs manquants. Import par **collage** *ou* par **fichier** (« Charger un
+  fichier… », web). `resetCatalogue()` vide tout pour repartir de zéro. UI dans Paramètres.
 - **Rendu** suspendu tant que les polices **et** le store ne sont pas prêts (`App.tsx`).
 
 ---
@@ -92,8 +94,12 @@ Implémentée dans `logic/seeds.ts`. Année/mois de référence figés (`CURRENT
   les MIME image ; propose un lien Google Images. L'image choisie est persistée localement.
 - **§7.2 OpenRouter** (`logic/ai.ts`) — assistant IA pour pré‑remplir une fiche variété. Le prompt
   impose un JSON **complet** : classification, cycle, fenêtres semis/récolte (mois entiers),
-  germination, profondeur/levée/espacement, et le **guide Récolte · Tri · Germination** (étapes).
-  Tout est mappé dans la variété → fiche immédiatement exploitable. La proposition reste
+  germination, profondeur/levée/espacement, et le **guide Récolte · Tri · Germination**.
+  ⚠️ **Grainor est une grainothèque** : ces trois guides décrivent le cycle de la **SEMENCE**
+  (récolter les graines sur porte‑graines, extraire/nettoyer/trier les graines, conserver et
+  tester leur germination) — **jamais** la culture ni la récolte du légume à manger. Le **même
+  prompt** est dupliqué (volontairement) dans `scripts/generate-varieties.sh` : garder les deux
+  synchronisés. Tout est mappé dans la variété → fiche immédiatement exploitable. La proposition reste
   **validée par l'utilisateur** avant enregistrement (`askOpenRouter`, `parseAI`, `aiStepsToGuide`).
   Une fois la clé enregistrée, `fetchFreeModels(key)` charge la **liste live des modèles gratuits**
   (`GET /api/v1/models`, filtre `:free` / tarif nul) ; le choix est persisté. Repli : `AI_MODELS`.
@@ -137,15 +143,25 @@ Build/déploiement **clé en main** :
 
 Voir [`CHANGELOG.md`](CHANGELOG.md). En bref : les **8 écrans + navigation** sont implémentés et
 fidèles aux captures du handoff (Définition de « terminé » §9 couverte). Persistance locale des
-variétés/récoltes, import/export JSON, assistant IA (fiche complète + modèles gratuits live),
-familles personnalisables, et build/déploiement web (PWA Netlify) en place. Typecheck et build
-Android/web verts.
+variétés/récoltes, import/export JSON (collage **ou** fichier, ajout/remplacement, reset),
+assistant IA (fiche complète + modèles gratuits live), familles personnalisables, et
+build/déploiement web (PWA Netlify) en place. Typecheck et build Android/web verts.
 
-**Reprise (prochaine session)** — chantier principal : intégrer les **243 variétés du jardin**
-listées en §9. Approche envisagée : génération des fiches par lots via l'assistant IA → relecture
-→ chargement groupé par **import JSON** ; dédoublonner avec le jeu de démo ; trancher le périmètre
-fruitiers/arbres/ornementales (hors potager). Pense aussi aux **captures d'écran** réelles
-(`docs/screenshots/`) pour le README.
+**Intégration des 243 variétés (§9)** — outillée par
+[`scripts/generate-varieties.sh`](scripts/generate-varieties.sh) : génère les fiches via OpenRouter
+hors‑ligne (cache résumable `scripts/cache/`), assemble `grainor-varietes.json` (tableau importable
+tel quel). Les 243 fiches ont été générées une première fois, puis le prompt a été **corrigé**
+pour centrer les guides sur la **graine** (cf. §7.2).
+
+**Reprise (prochaine session)** —
+1. **Régénérer** les 243 fiches avec le prompt corrigé : vider le cache
+   (`rm -f scripts/cache/*.json`) puis relancer le script (le cache fait *sauter* ce qui existe
+   déjà → sans purge, rien ne change). Tester d'abord sur une variété (`--only "Chicorée frisée"`).
+2. **Ré‑importer** `grainor-varietes.json` en cochant **« Remplacer le catalogue existant »** (ou
+   après « Réinitialiser le catalogue ») pour éviter les doublons.
+3. Dédoublonner avec le jeu de démo ; trancher le périmètre fruitiers/arbres/ornementales (hors
+   potager, code couleur défini pour 9 familles). Penser aux **captures d'écran** réelles
+   (`docs/screenshots/`) pour le README.
 
 ---
 

@@ -138,8 +138,14 @@ Détails dans [`CONTEXT.md`](CONTEXT.md) et [`GrainorApp/src/logic/seeds.ts`](Gr
   proposition remplit **toute** la fiche (germination, classification, culture, et le guide
   Récolte · Tri · Germination) et reste **validée par l'utilisateur** avant enregistrement.
 - 💾 **Sauvegarde / restauration** — variétés et récoltes **persistées localement** ; **export /
-  import JSON** dans les Paramètres pour changer de téléphone sans rien perdre. Le bouton
-  **Modifier** d'une fiche ouvre un formulaire d'édition.
+  import JSON** dans les Paramètres pour changer de téléphone sans rien perdre. L'import accepte un
+  **collage** ou un **fichier** (« Charger un fichier… », web), en **ajout** ou en **remplacement**
+  du catalogue (case dédiée), et un bouton **Réinitialiser le catalogue** permet de repartir de
+  zéro. Le bouton **Modifier** d'une fiche ouvre un formulaire d'édition.
+- 🌱 **Génération de catalogue hors‑ligne** — [`scripts/generate-varieties.sh`](scripts/generate-varieties.sh)
+  produit des fiches variétés complètes via OpenRouter (cache résumable, clé jamais en dur) et
+  assemble un `grainor-varietes.json` prêt à importer. Les guides Récolte · Tri · Germination y
+  décrivent la **récupération des graines** (grainothèque), pas la culture du légume.
 
 > 🔐 **Sécurité — important.** La clé API OpenRouter est saisie dans les Paramètres et stockée
 > dans le **stockage local sécurisé** de l'appareil (`expo-secure-store`). Elle n'est **jamais**
@@ -231,6 +237,7 @@ Grainor/
 │       ├── screens/        # écrans (Catalogue, Fiche détail, …)
 │       └── navigation/     # onglets + pile + FAB
 ├── web/                    # PWA : manifest + icônes + snippet <head>
+├── scripts/                # génération des fiches variétés (OpenRouter) + cache résumable
 ├── design_handoff_grainor/ # spec fonctionnelle + design + captures de référence
 ├── CONTEXT.md              # contexte d'architecture & de design (pour contributeurs/agents)
 └── CHANGELOG.md            # journal des versions

@@ -8,6 +8,17 @@ et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 ## [Non publié]
 
 ### Ajouté
+- **Script de génération des fiches** (`scripts/generate-varieties.sh`) — génère *hors‑ligne* les
+  fiches variétés via OpenRouter, **sans consommer de tokens côté assistant**. Cache par variété
+  (`scripts/cache/<slug>.json`, résumable : ne régénère que ce qui manque), clé API **jamais en
+  dur**, et assemble un `grainor-varietes.json` importable tel quel. Sert à intégrer les **243
+  variétés du jardin** (backlog `CONTEXT.md` §9).
+- **Import par fichier (web)** — bouton « Charger un fichier… » dans Paramètres : sélection d'un
+  `.json` (utile pour un gros catalogue) sans avoir à coller le texte dans le champ.
+- **Import en remplacement** — case « Remplacer le catalogue existant » : ré‑importer un catalogue
+  régénéré **écrase** les variétés au lieu d'ajouter (plus de doublons) ; récoltes conservées.
+- **Réinitialiser le catalogue** — bouton (confirmation en deux temps) qui vide variétés, récoltes
+  et photos pour repartir de zéro avant un import propre (`resetCatalogue` dans `AppContext`).
 - **Fiche IA complète** — l'assistant remplit désormais *tous* les champs : taux de germination,
   classification botanique (classe/ordre/genre/espèce), profondeur/levée/espacement, fenêtre de
   semis et de récolte, et surtout le guide **Récolte · Tri · Germination** (étapes numérotées).
@@ -33,7 +44,16 @@ et le projet suit le [versionnage sémantique](https://semver.org/lang/fr/).
 - **`app.json`** — config `web` (nom, langue, couleurs, `display: standalone`) ; nom de l'app
   passé à « Grainor ».
 
+### Corrigé
+- **Prompt IA centré sur la GRAINE** — les guides **Récolte · Tri · Germination** (section
+  « Récupérer ses graines ») décrivaient la culture et la récolte du *légume* à manger ; ils
+  décrivent désormais le cycle de la **semence** : récolter les graines sur porte‑graines
+  (montée en graines, maturité, récolte à sec), extraire / nettoyer / trier les graines, puis
+  conserver et tester leur germination. Corrigé dans les **deux prompts synchronisés**
+  (`scripts/generate-varieties.sh` et `GrainorApp/src/logic/ai.ts`).
+
 ### À venir
+- Régénérer les 243 fiches avec le prompt corrigé, puis ré‑importer en mode « Remplacer ».
 - Captures d'écran prises sur appareil/navigateur (dossier `docs/screenshots/`).
 
 ---
