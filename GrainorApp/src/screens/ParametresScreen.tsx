@@ -117,11 +117,12 @@ export function ParametresScreen() {
     }
   };
 
-  const onImport = () => {
+  // Applique un JSON (collé ou chargé depuis un fichier) et affiche le bilan.
+  const applyImport = (raw: string) => {
     setIoMsg('');
     setIoErr('');
     try {
-      const res = importData(importText);
+      const res = importData(raw);
       setImportText('');
       setIoMsg(
         res.replaced
@@ -130,6 +131,34 @@ export function ParametresScreen() {
       );
     } catch (e: any) {
       setIoErr(e?.message ? `JSON invalide : ${e.message}` : 'JSON invalide.');
+    }
+  };
+
+  const onImport = () => applyImport(importText);
+
+  // Charge un gros fichier JSON sans avoir à le coller (web : sélecteur de fichier natif).
+  const onPickFile = () => {
+    setIoMsg('');
+    setIoErr('');
+    if (Platform.OS !== 'web') {
+      setIoErr('Le chargement de fichier est disponible sur la version web. Sur mobile, collez le JSON ci-dessous.');
+      return;
+    }
+    try {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json,.json';
+      input.onchange = () => {
+        const file = input.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => applyImport(String(reader.result ?? ''));
+        reader.onerror = () => setIoErr('Lecture du fichier impossible.');
+        reader.readAsText(file);
+      };
+      input.click();
+    } catch {
+      setIoErr('Sélecteur de fichier indisponible.');
     }
   };
 
@@ -274,6 +303,17 @@ export function ParametresScreen() {
           )}
 
           <SectionLabel style={styles.fieldLabel}>Importer un JSON</SectionLabel>
+          {Platform.OS === 'web' && (
+            <>
+              <TouchableOpacity style={[styles.ioBtnOutline, { flex: 0, marginTop: 4 }]} activeOpacity={0.7} onPress={onPickFile}>
+                <Icon name="box" size={16} color={colors.primary} strokeWidth={2} />
+                <Text style={styles.ioBtnOutlineText}>Charger un fichier…</Text>
+              </TouchableOpacity>
+              <Text style={styles.ioHint}>
+                Recommandé pour un gros catalogue (ex. grainor-varietes.json) : pas besoin de coller le texte.
+              </Text>
+            </>
+          )}
           <TextInput
             value={importText}
             onChangeText={setImportText}
