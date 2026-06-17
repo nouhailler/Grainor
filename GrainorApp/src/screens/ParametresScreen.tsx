@@ -93,6 +93,7 @@ export function ParametresScreen() {
   // ── Sauvegarde & restauration (JSON) ───────────────────────────────
   const [exportJson, setExportJson] = useState('');
   const [importText, setImportText] = useState('');
+  const [replaceMode, setReplaceMode] = useState(false);
   const [ioMsg, setIoMsg] = useState('');
   const [ioErr, setIoErr] = useState('');
 
@@ -122,12 +123,14 @@ export function ParametresScreen() {
     setIoMsg('');
     setIoErr('');
     try {
-      const res = importData(raw);
+      const res = importData(raw, { replace: replaceMode });
       setImportText('');
       setIoMsg(
-        res.replaced
-          ? `Sauvegarde restaurée : ${res.seeds} variété(s)${res.harvests ? `, ${res.harvests} récolte(s)` : ''}.`
-          : `${res.seeds} variété(s) ajoutée(s) au catalogue.`,
+        res.harvests
+          ? `Sauvegarde restaurée : ${res.seeds} variété(s), ${res.harvests} récolte(s).`
+          : res.replaced
+            ? `Catalogue remplacé : ${res.seeds} variété(s).`
+            : `${res.seeds} variété(s) ajoutée(s) au catalogue.`,
       );
     } catch (e: any) {
       setIoErr(e?.message ? `JSON invalide : ${e.message}` : 'JSON invalide.');
@@ -303,6 +306,22 @@ export function ParametresScreen() {
           )}
 
           <SectionLabel style={styles.fieldLabel}>Importer un JSON</SectionLabel>
+          <TouchableOpacity
+            style={styles.checkRow}
+            activeOpacity={0.7}
+            onPress={() => setReplaceMode((v) => !v)}
+          >
+            <View style={[styles.checkBox, replaceMode && styles.checkBoxOn]}>
+              {replaceMode && <Icon name="check" size={13} color={colors.onPrimary} strokeWidth={2.6} />}
+            </View>
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Text style={styles.checkLabel}>Remplacer le catalogue existant</Text>
+              <Text style={styles.ioHint}>
+                Écrase toutes les variétés actuelles par celles du JSON (sans créer de doublons). Vos récoltes
+                sont conservées. Laissez décoché pour ajouter au catalogue.
+              </Text>
+            </View>
+          </TouchableOpacity>
           {Platform.OS === 'web' && (
             <>
               <TouchableOpacity style={[styles.ioBtnOutline, { flex: 0, marginTop: 4 }]} activeOpacity={0.7} onPress={onPickFile}>
@@ -421,6 +440,19 @@ const styles = StyleSheet.create({
   ioBtnOutlineText: { fontFamily: fonts.sansSemi, fontSize: 14, color: colors.primary },
   jsonArea: { minHeight: 96, textAlignVertical: 'top', fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', fontSize: 11.5 },
   ioHint: { fontFamily: fonts.sans, fontSize: 11.5, color: colors.textFaint, marginTop: 8, lineHeight: 16 },
+  checkRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, marginBottom: 10 },
+  checkBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: colors.borderStrong,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 1,
+  },
+  checkBoxOn: { backgroundColor: colors.primary, borderColor: colors.primary },
+  checkLabel: { fontFamily: fonts.sansSemi, fontSize: 13.5, color: colors.textBody },
   ioOk: { fontFamily: fonts.sansSemi, fontSize: 12.5, color: '#4F7A3F', marginTop: 12 },
   about: { fontFamily: fonts.sans, fontSize: 13, color: colors.textBody, lineHeight: 20 },
   aboutMeta: { marginTop: 14, paddingTop: 13, borderTopWidth: 1, borderTopColor: colors.divider, flexDirection: 'row', justifyContent: 'space-between' },

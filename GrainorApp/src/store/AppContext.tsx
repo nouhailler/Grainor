@@ -46,7 +46,7 @@ interface AppState {
   setAiModel: (model: string) => void;
   getSeed: (id: number) => EnrichedSeed | undefined;
   exportData: () => string;
-  importData: (raw: string | unknown) => ImportResult;
+  importData: (raw: string | unknown, opts?: { replace?: boolean }) => ImportResult;
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -174,12 +174,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           null,
           2,
         ),
-      importData: (raw) => {
+      importData: (raw, opts) => {
         const data: any = typeof raw === 'string' ? JSON.parse(raw) : raw;
 
-        // Forme 1 : tableau de variétés → ajout.
+        // Forme 1 : tableau de variétés → ajout (ou remplacement si opts.replace).
         // Forme 2 : sauvegarde complète {seeds, harvests?, photos?} → restauration.
-        // Forme 3 : une seule variété → ajout.
+        // Forme 3 : une seule variété → ajout (ou remplacement si opts.replace).
         let incomingSeeds: any[] = [];
         let incomingHarvests: any[] | null = null;
         let incomingPhotos: Record<number, string> | null = null;
@@ -207,6 +207,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             AsyncStorage.setItem(PHOTOS_KEY, JSON.stringify(incomingPhotos)).catch(() => {});
           }
           return { seeds: restored.length, harvests: incomingHarvests ? incomingHarvests.length : 0, replaced: true };
+        }
+
+        // Remplacement du catalogue : on écrase les variétés existantes par celles
+        // importées (récoltes et photos conservées). Utile pour ré-importer un catalogue
+        // régénéré sans créer de doublons.
+        if (opts?.replace) {
+          let nextId = 1;
+          const replaced = incomingSeeds.map((s) => normalizeSeed(s, Number.isFinite(+s?.id) ? +s.id : nextId++));
+          setRawSeeds(replaced);
+          return { seeds: replaced.length, harvests: 0, replaced: true };
         }
 
         // Ajout : identifiants neufs pour éviter les collisions.
