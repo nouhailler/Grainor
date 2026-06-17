@@ -27,7 +27,7 @@ import { colors, fonts, radius, spacing } from '../theme/tokens';
 
 export function ParametresScreen() {
   const nav = useNavigation<any>();
-  const { apiKey, aiModel, saveApiKey, exportData, importData } = useApp();
+  const { apiKey, aiModel, saveApiKey, exportData, importData, resetCatalogue } = useApp();
   const [key, setKey] = useState(apiKey);
   const [model, setModel] = useState(aiModel);
   const [saved, setSaved] = useState(false);
@@ -94,6 +94,7 @@ export function ParametresScreen() {
   const [exportJson, setExportJson] = useState('');
   const [importText, setImportText] = useState('');
   const [replaceMode, setReplaceMode] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
   const [ioMsg, setIoMsg] = useState('');
   const [ioErr, setIoErr] = useState('');
 
@@ -138,6 +139,18 @@ export function ParametresScreen() {
   };
 
   const onImport = () => applyImport(importText);
+
+  // Reset en deux temps : premier appui = armement, second = exécution.
+  const onReset = () => {
+    if (!confirmReset) {
+      setConfirmReset(true);
+      return;
+    }
+    resetCatalogue();
+    setConfirmReset(false);
+    setIoErr('');
+    setIoMsg('Catalogue vidé. Vous pouvez maintenant importer un fichier.');
+  };
 
   // Charge un gros fichier JSON sans avoir à le coller (web : sélecteur de fichier natif).
   const onPickFile = () => {
@@ -345,6 +358,28 @@ export function ParametresScreen() {
           />
           {!!ioMsg && <Text style={styles.ioOk}>{ioMsg}</Text>}
           {!!ioErr && <Text style={styles.error}>{ioErr}</Text>}
+
+          <View style={styles.resetSep} />
+          <SectionLabel style={styles.fieldLabel}>Repartir de zéro</SectionLabel>
+          <Text style={styles.desc}>
+            Vide entièrement le catalogue (variétés, récoltes et photos) pour réimporter proprement.
+            Action irréversible.
+          </Text>
+          <TouchableOpacity
+            style={[styles.resetBtn, confirmReset && styles.resetBtnArmed]}
+            activeOpacity={0.8}
+            onPress={onReset}
+          >
+            <Icon name="alert" size={16} color={confirmReset ? colors.onPrimary : '#BC6A43'} strokeWidth={2} />
+            <Text style={[styles.resetBtnText, confirmReset && styles.resetBtnTextArmed]}>
+              {confirmReset ? 'Confirmer la suppression de tout' : 'Réinitialiser le catalogue'}
+            </Text>
+          </TouchableOpacity>
+          {confirmReset && (
+            <TouchableOpacity activeOpacity={0.7} onPress={() => setConfirmReset(false)}>
+              <Text style={styles.resetCancel}>Annuler</Text>
+            </TouchableOpacity>
+          )}
         </Card>
 
         {/* À propos */}
@@ -453,6 +488,28 @@ const styles = StyleSheet.create({
   },
   checkBoxOn: { backgroundColor: colors.primary, borderColor: colors.primary },
   checkLabel: { fontFamily: fonts.sansSemi, fontSize: 13.5, color: colors.textBody },
+  resetSep: { height: 1, backgroundColor: colors.borderInput, marginTop: 18 },
+  resetBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 1.5,
+    borderColor: '#BC6A43',
+    borderRadius: 12,
+    paddingVertical: 13,
+    marginTop: 12,
+  },
+  resetBtnArmed: { backgroundColor: '#BC6A43', borderColor: '#BC6A43' },
+  resetBtnText: { fontFamily: fonts.sansSemi, fontSize: 14, color: '#BC6A43' },
+  resetBtnTextArmed: { color: colors.onPrimary },
+  resetCancel: {
+    fontFamily: fonts.sansSemi,
+    fontSize: 13,
+    color: colors.textFaint,
+    textAlign: 'center',
+    marginTop: 10,
+  },
   ioOk: { fontFamily: fonts.sansSemi, fontSize: 12.5, color: '#4F7A3F', marginTop: 12 },
   about: { fontFamily: fonts.sans, fontSize: 13, color: colors.textBody, lineHeight: 20 },
   aboutMeta: { marginTop: 14, paddingTop: 13, borderTopWidth: 1, borderTopColor: colors.divider, flexDirection: 'row', justifyContent: 'space-between' },

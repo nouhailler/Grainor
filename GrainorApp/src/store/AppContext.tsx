@@ -47,6 +47,7 @@ interface AppState {
   getSeed: (id: number) => EnrichedSeed | undefined;
   exportData: () => string;
   importData: (raw: string | unknown, opts?: { replace?: boolean }) => ImportResult;
+  resetCatalogue: () => void;
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -226,6 +227,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           return [...prev, ...list];
         });
         return { seeds: incomingSeeds.length, harvests: 0, replaced: false };
+      },
+      // Repart de zéro : vide variétés, récoltes et photos (utile avant un import propre).
+      resetCatalogue: () => {
+        setRawSeeds([]);
+        setHarvests([]);
+        setPhotos({});
+        AsyncStorage.setItem(PHOTOS_KEY, JSON.stringify({})).catch(() => {});
       },
     }),
     [seeds, rawSeeds, harvests, photos, apiKey, aiModel, ready],
